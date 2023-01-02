@@ -1,6 +1,6 @@
 #include <array>
 #include <SDL2/SDL.h>
-#include "Constants.hpp"
+#include "Constants/Constants.hpp"
 
 
 class Renderer {
