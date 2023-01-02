@@ -48,7 +48,7 @@ void Renderer::Initialize() {
         return;
     }
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetWindowFullscreen(window, SDL_WINDOW_RESIZABLE);
+    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 }
 
 void Renderer::Setup() {
@@ -83,8 +83,6 @@ void Renderer::Render() {
     Clear(0xFFFFFF00);
 
     RenderColorBuffer();
-
-    //...
 
     SDL_RenderPresent(renderer);
 }

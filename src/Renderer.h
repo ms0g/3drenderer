@@ -24,7 +24,6 @@ private:
 
     void DrawRect(int x, int y, int width, int height, color_t color);
 
-
     void Clear(color_t color);
 
     SDL_Window* window{};
