@@ -1,6 +1,22 @@
 #include "Renderer.h"
 #include <iostream>
 
+Renderer::Renderer() {
+    Initialize();
+    Setup();
+}
+
+
+Renderer::~Renderer() {
+    // Clean up SDL
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    SDL_Quit();
+
+    // Clean up texture
+    SDL_DestroyTexture(texture);
+}
+
 void Renderer::Initialize() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         std::cerr << "Error initializing SDL" << std::endl;
@@ -32,8 +48,7 @@ void Renderer::Initialize() {
         return;
     }
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
-    isRunning = true;
+    SDL_SetWindowFullscreen(window, SDL_WINDOW_RESIZABLE);
 }
 
 void Renderer::Setup() {
@@ -43,32 +58,6 @@ void Renderer::Setup() {
                                 WINDOW_WIDTH,
                                 WINDOW_HEIGHT);
 }
-
-void Renderer::Run() {
-    Setup();
-    while (isRunning) {
-        ProcessInput();
-        Update();
-        Render();
-    }
-}
-
-void Renderer::ProcessInput() {
-    SDL_Event event;
-    SDL_PollEvent(&event);
-
-    switch (event.type) {
-        case SDL_QUIT:
-            isRunning = false;
-            break;
-        case SDL_KEYDOWN:
-            if (event.key.keysym.sym == SDLK_ESCAPE)
-                isRunning = false;
-            break;
-    }
-}
-
-
 
 void Renderer::Update() {
 
@@ -111,16 +100,6 @@ void Renderer::RenderColorBuffer() {
 
 void Renderer::Clear(color_t color) {
     colorBuffer.fill(color);
-}
-
-void Renderer::Destroy() {
-    // Clean up SDL
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
-    SDL_Quit();
-
-    // Clean up texture
-    SDL_DestroyTexture(texture);
 }
 
 

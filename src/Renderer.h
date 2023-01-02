@@ -5,18 +5,18 @@
 
 class Renderer {
 public:
-    void Initialize();
+    Renderer();
 
-    void Run();
-
-    void Destroy();
-
-private:
-    void ProcessInput();
+    ~Renderer();
 
     void Update();
 
     void Render();
+
+private:
+    void Initialize();
+
+    void Setup();
 
     void RenderColorBuffer();
 
@@ -24,7 +24,6 @@ private:
 
     void DrawRect(int x, int y, int width, int height, color_t color);
 
-    void Setup();
 
     void Clear(color_t color);
 
@@ -33,8 +32,6 @@ private:
 
     SDL_Texture* texture{};
     std::array<color_t, WINDOW_WIDTH * WINDOW_HEIGHT> colorBuffer{};
-    bool isRunning{false};
-
 
 };
 
