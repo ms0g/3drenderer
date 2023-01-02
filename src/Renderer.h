@@ -1,0 +1,40 @@
+#include <array>
+#include <SDL2/SDL.h>
+#include "Constants.hpp"
+
+
+class Renderer {
+public:
+    void Initialize();
+
+    void Run();
+
+    void Destroy();
+
+private:
+    void ProcessInput();
+
+    void Update();
+
+    void Render();
+
+    void RenderColorBuffer();
+
+    void PutPixel(int x, int y, color_t color);
+
+    void DrawRect(int x, int y, int width, int height, color_t color);
+
+    void Setup();
+
+    void Clear(color_t color);
+
+    SDL_Window* window{};
+    SDL_Renderer* renderer{};
+
+    SDL_Texture* texture{};
+    std::array<color_t, WINDOW_WIDTH * WINDOW_HEIGHT> colorBuffer{};
+    bool isRunning{false};
+
+
+};
+
