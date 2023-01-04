@@ -1,5 +1,7 @@
 #include <array>
 #include <SDL2/SDL.h>
+#include "Math/Vec3.h"
+#include "Math/Vec2.h"
 #include "Constants/Constants.hpp"
 
 
@@ -14,9 +16,10 @@ public:
     void Render();
 
 private:
-    void Initialize();
 
-    void Setup();
+    void DrawGrid();
+
+    Vec2 Project(Vec3 point);
 
     void RenderColorBuffer();
 
@@ -31,6 +34,14 @@ private:
 
     SDL_Texture* texture{};
     std::array<color_t, WINDOW_WIDTH * WINDOW_HEIGHT> colorBuffer{};
+
+    static constexpr int N_POINTS = (9 * 9 * 9);
+    static constexpr float fov_factor = 128;
+
+    Vec3 cube_points[N_POINTS]; // 9x9x9 cube
+    Vec2 projected_points[N_POINTS];
+
+
 
 };
 
