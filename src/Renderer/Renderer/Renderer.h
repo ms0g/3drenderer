@@ -36,10 +36,12 @@ private:
     std::array<color_t, WINDOW_WIDTH * WINDOW_HEIGHT> colorBuffer{};
 
     static constexpr int N_POINTS = (9 * 9 * 9);
-    static constexpr float fov_factor = 128;
+    static constexpr float fov_factor = 640;
 
     Vec3 cube_points[N_POINTS]; // 9x9x9 cube
     Vec2 projected_points[N_POINTS];
+
+    Vec3 cameraPos;
 
 
 

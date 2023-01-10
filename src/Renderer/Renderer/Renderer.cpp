@@ -42,6 +42,7 @@ Renderer::Renderer() {
                                 WINDOW_WIDTH,
                                 WINDOW_HEIGHT);
 
+    cameraPos = {0, 0, -5};
     int point_count = 0;
 
     // Start loading my array of vectors
@@ -71,6 +72,9 @@ void Renderer::Update() {
     for (int i = 0; i < N_POINTS; i++) {
         Vec3 point = cube_points[i];
 
+        // Move the point away from camera
+        point.z -= cameraPos.z;
+
         // Project the current point
         Vec2 projected_point = Project(point);
 
@@ -83,7 +87,7 @@ void Renderer::Render() {
     DrawGrid();
 
     // Loop all projected points and render them
-    for (auto projected_point : projected_points) {
+    for (auto projected_point: projected_points) {
         DrawRect(
                 projected_point.x + (WINDOW_WIDTH / 2),
                 projected_point.y + (WINDOW_HEIGHT / 2),
@@ -109,8 +113,8 @@ void Renderer::DrawGrid() {
 
 Vec2 Renderer::Project(Vec3 point) {
     Vec2 projected_point = {
-            (fov_factor * point.x),
-            (fov_factor * point.y)
+            (fov_factor * point.x) / point.z,
+            (fov_factor * point.y) / point.z
     };
 
     return projected_point;
@@ -126,7 +130,7 @@ void Renderer::RenderColorBuffer() {
 }
 
 void Renderer::PutPixel(int x, int y, color_t color) {
-    if (x < WINDOW_WIDTH && y < WINDOW_HEIGHT)
+    if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT)
         colorBuffer[(WINDOW_WIDTH * y) + x] = color;
 }
 
