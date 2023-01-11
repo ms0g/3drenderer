@@ -23,12 +23,40 @@ void Vec3::Scale(const float n) {
     z *= n;
 }
 
-//Vec3 Vec3::Rotate(const float angle) const {
-//    Vec3 result;
-//    result.x = x * cos(angle) - y * sin(angle);
-//    result.y = x * sin(angle) + y * cos(angle);
-//    return result;
-//}
+Vec3 Vec3::Rotate(const float angleX, const float angleY, const float angleZ) const {
+    Vec3 result = RotateX(angleX);
+    result = result.RotateY(angleY);
+    result = result.RotateZ(angleZ);
+    return result;
+}
+
+Vec3 Vec3::RotateX(float angle) const {
+    Vec3 result = {
+        x,
+        y * cos(angle) - z * sin(angle),
+        y * sin(angle) + z * cos(angle)
+
+    };
+    return result;
+}
+
+Vec3 Vec3::RotateY(float angle) const {
+    Vec3 result = {
+            x * cos(angle) - z * sin(angle),
+            y,
+            x * sin(angle) + z * cos(angle)
+    };
+    return result;
+}
+
+Vec3 Vec3::RotateZ(float angle) const {
+    Vec3 result = {
+            x * cos(angle) - y * sin(angle),
+            x * sin(angle) + y * cos(angle),
+            z,
+    };
+    return result;
+}
 
 float Vec3::Magnitude() const {
     return sqrtf(x * x + y * y + z * z);
@@ -148,3 +176,6 @@ Vec3 Vec3::operator-() const {
     result.z = z * -1;
     return result;
 }
+
+
+
