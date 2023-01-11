@@ -43,6 +43,7 @@ Renderer::Renderer() {
                                 WINDOW_HEIGHT);
 
     cameraPos = {0, 0, -5};
+    cubeRotation = {0, 0, 0};
     int point_count = 0;
 
     // Start loading my array of vectors
@@ -69,14 +70,20 @@ Renderer::~Renderer() {
 }
 
 void Renderer::Update() {
+    cubeRotation.x += 0.01;
+    cubeRotation.y += 0.01;
+    cubeRotation.z += 0.01;
+
     for (int i = 0; i < N_POINTS; i++) {
         Vec3 point = cube_points[i];
 
+        Vec3 transformedPoint = point.Rotate(cubeRotation.x, cubeRotation.y, cubeRotation.z);
+
         // Move the point away from camera
-        point.z -= cameraPos.z;
+        transformedPoint.z -= cameraPos.z;
 
         // Project the current point
-        Vec2 projected_point = Project(point);
+        Vec2 projected_point = Project(transformedPoint);
 
         // Save the projected 2D vector in the array of projected points
         projected_points[i] = projected_point;

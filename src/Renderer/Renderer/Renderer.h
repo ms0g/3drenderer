@@ -42,6 +42,7 @@ private:
     Vec2 projected_points[N_POINTS];
 
     Vec3 cameraPos;
+    Vec3 cubeRotation;
 
 
 
