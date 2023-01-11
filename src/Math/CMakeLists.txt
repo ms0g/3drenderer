@@ -1,3 +1,3 @@
 file(GLOB_RECURSE SRC "Math/*")
 
-add_library(Math ${SRC})
+add_library(Math SHARED ${SRC})
