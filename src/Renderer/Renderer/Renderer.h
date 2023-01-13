@@ -38,6 +38,10 @@ private:
     static constexpr int N_POINTS = (9 * 9 * 9);
     static constexpr float fov_factor = 640;
 
+    uint32_t millisecsPreviousFrame{0};
+    static constexpr int FPS = 60;
+    static constexpr int MILLISECS_PER_FRAME = 1000 / FPS;
+
     Vec3 cube_points[N_POINTS]; // 9x9x9 cube
     Vec2 projected_points[N_POINTS];
 

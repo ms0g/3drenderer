@@ -70,9 +70,13 @@ Renderer::~Renderer() {
 }
 
 void Renderer::Update() {
+    auto timeToWait = MILLISECS_PER_FRAME - (SDL_GetTicks() - millisecsPreviousFrame);
+    if (timeToWait > 0 && timeToWait <= MILLISECS_PER_FRAME)
+        SDL_Delay(timeToWait);
+
     cubeRotation.x += 0.01;
     cubeRotation.y += 0.01;
-    cubeRotation.z += 0.01;
+    cubeRotation.z += 0.01  ;
 
     for (int i = 0; i < N_POINTS; i++) {
         Vec3 point = cube_points[i];
