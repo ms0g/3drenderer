@@ -29,6 +29,10 @@ private:
 
     void DrawRect(int x, int y, int width, int height, color_t color);
 
+    void DrawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color);
+
+    void DDA(int x0, int y0, int x1, int y1, color_t color);
+
     void Clear(color_t color);
 
     Vec3 cameraPos;
@@ -48,8 +52,6 @@ private:
     uint32_t millisecsPreviousFrame{0};
     static constexpr int FPS = 60;
     static constexpr int MILLISECS_PER_FRAME = 1000 / FPS;
-
-
 
 
 };

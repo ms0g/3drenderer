@@ -70,15 +70,14 @@ void Renderer::Update() {
     cubeRotation.z += 0.01;
 
     for (int i = 0; i < N_MESH_FACES; i++) {
-        TriangleFace face = meshFaces[i];
+        TriangleFace meshFace = meshFaces[i];
 
         Vec3 faceVertices[3];
-        faceVertices[0] = meshVertices[face.a - 1];
-        faceVertices[1] = meshVertices[face.b - 1];
-        faceVertices[2] = meshVertices[face.c - 1];
+        faceVertices[0] = meshVertices[meshFace.a - 1];
+        faceVertices[1] = meshVertices[meshFace.b - 1];
+        faceVertices[2] = meshVertices[meshFace.c - 1];
 
         Triangle projectedTriangle;
-
         // Loop all three vertices of this current face and apply transformations
         for (int j = 0; j < 3; ++j) {
             Vec3 transformedVertex = faceVertices[j];
@@ -108,9 +107,21 @@ void Renderer::Render() {
 
     // Loop all projected triangles and render them
     for (const auto& triangle: trianglesToRender) {
+        // Draw vertex points
         DrawRect(triangle.points[0].x, triangle.points[0].y, 3, 3, 0xFFFFFF00);
         DrawRect(triangle.points[1].x, triangle.points[1].y, 3, 3, 0xFFFFFF00);
         DrawRect(triangle.points[2].x, triangle.points[2].y, 3, 3, 0xFFFFFF00);
+
+        // Draw unfilled triangles
+        DrawTriangle(
+                triangle.points[0].x,
+                triangle.points[0].y,
+                triangle.points[1].x,
+                triangle.points[1].y,
+                triangle.points[2].x,
+                triangle.points[2].y,
+                0xFF00FF00
+        );
     }
 
     RenderColorBuffer();
@@ -155,6 +166,31 @@ void Renderer::DrawRect(int x, int y, int width, int height, color_t color) {
         for (int j = y; j <= (y + height); j++) {
             PutPixel(i, j, color);
         }
+    }
+}
+
+void Renderer::DrawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color) {
+    DDA(x0, y0, x1, y1, color);
+    DDA(x1, y1, x2, y2, color);
+    DDA(x2, y2, x0, y0, color);
+}
+
+void Renderer::DDA(int x0, int y0, int x1, int y1, color_t color) {
+    int dx = x1 - x0;
+    int dy = y1 - y0;
+
+    int step = (abs(dx) >= abs(dy)) ? abs(dx) : abs(dy);
+
+    float xinc = dx / static_cast<float>(step);
+    float yinc = dy / static_cast<float>(step);
+
+    float x = x0;
+    float y = y0;
+
+    for (int i = 0; i < step; ++i) {
+        PutPixel(round(x), round(y), color);
+        x += xinc;
+        y += yinc;
     }
 }
 
