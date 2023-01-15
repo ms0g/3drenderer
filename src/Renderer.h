@@ -1,8 +1,10 @@
 #include <array>
 #include <SDL2/SDL.h>
-#include "Math/Vec3.h"
-#include "Math/Vec2.h"
-#include "Constants/Constants.hpp"
+#include "Vec3.h"
+#include "Vec2.h"
+#include "Mesh.h"
+#include "Triangle.h"
+#include "Constants.hpp"
 
 
 class Renderer {
@@ -29,6 +31,9 @@ private:
 
     void Clear(color_t color);
 
+    Vec3 cameraPos;
+    Vec3 cubeRotation;
+
     SDL_Window* window{};
     SDL_Renderer* renderer{};
 
@@ -38,15 +43,12 @@ private:
     static constexpr int N_POINTS = (9 * 9 * 9);
     static constexpr float fov_factor = 640;
 
+    Triangle trianglesToRender[N_MESH_FACES];
+
     uint32_t millisecsPreviousFrame{0};
     static constexpr int FPS = 60;
     static constexpr int MILLISECS_PER_FRAME = 1000 / FPS;
 
-    Vec3 cube_points[N_POINTS]; // 9x9x9 cube
-    Vec2 projected_points[N_POINTS];
-
-    Vec3 cameraPos;
-    Vec3 cubeRotation;
 
 
 

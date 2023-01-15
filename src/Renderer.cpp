@@ -44,18 +44,7 @@ Renderer::Renderer() {
 
     cameraPos = {0, 0, -5};
     cubeRotation = {0, 0, 0};
-    int point_count = 0;
 
-    // Start loading my array of vectors
-    // From -1 to 1 (in this 9x9x9 cube)
-    for (float x = -1; x <= 1; x += 0.25) {
-        for (float y = -1; y <= 1; y += 0.25) {
-            for (float z = -1; z <= 1; z += 0.25) {
-                Vec3 new_point = {x, y, z};
-                cube_points[point_count++] = new_point;
-            }
-        }
-    }
 }
 
 
@@ -74,38 +63,54 @@ void Renderer::Update() {
     if (timeToWait > 0 && timeToWait <= MILLISECS_PER_FRAME)
         SDL_Delay(timeToWait);
 
+    millisecsPreviousFrame = SDL_GetTicks();
+
     cubeRotation.x += 0.01;
     cubeRotation.y += 0.01;
-    cubeRotation.z += 0.01  ;
+    cubeRotation.z += 0.01;
 
-    for (int i = 0; i < N_POINTS; i++) {
-        Vec3 point = cube_points[i];
+    for (int i = 0; i < N_MESH_FACES; i++) {
+        TriangleFace face = meshFaces[i];
 
-        Vec3 transformedPoint = point.Rotate(cubeRotation.x, cubeRotation.y, cubeRotation.z);
+        Vec3 faceVertices[3];
+        faceVertices[0] = meshVertices[face.a - 1];
+        faceVertices[1] = meshVertices[face.b - 1];
+        faceVertices[2] = meshVertices[face.c - 1];
 
-        // Move the point away from camera
-        transformedPoint.z -= cameraPos.z;
+        Triangle projectedTriangle;
 
-        // Project the current point
-        Vec2 projected_point = Project(transformedPoint);
+        // Loop all three vertices of this current face and apply transformations
+        for (int j = 0; j < 3; ++j) {
+            Vec3 transformedVertex = faceVertices[j];
 
-        // Save the projected 2D vector in the array of projected points
-        projected_points[i] = projected_point;
+            transformedVertex = transformedVertex.Rotate(cubeRotation.x, cubeRotation.y, cubeRotation.z);
+
+            // Translate the vertex away from the camera
+            transformedVertex.z -= cameraPos.z;
+
+            // Project the current vertex
+            Vec2 projectedPoint = Project(transformedVertex);
+
+            // Scale and translate the projected points to the middle of the screen
+            projectedPoint.x += (WINDOW_WIDTH / 2);
+            projectedPoint.y += (WINDOW_HEIGHT / 2);
+
+            projectedTriangle.points[j] = projectedPoint;
+
+        }
+
+        trianglesToRender[i] = projectedTriangle;
     }
 }
 
 void Renderer::Render() {
     DrawGrid();
 
-    // Loop all projected points and render them
-    for (auto projected_point: projected_points) {
-        DrawRect(
-                projected_point.x + (WINDOW_WIDTH / 2),
-                projected_point.y + (WINDOW_HEIGHT / 2),
-                4,
-                4,
-                0xFFFFFF00
-        );
+    // Loop all projected triangles and render them
+    for (const auto& triangle: trianglesToRender) {
+        DrawRect(triangle.points[0].x, triangle.points[0].y, 3, 3, 0xFFFFFF00);
+        DrawRect(triangle.points[1].x, triangle.points[1].y, 3, 3, 0xFFFFFF00);
+        DrawRect(triangle.points[2].x, triangle.points[2].y, 3, 3, 0xFFFFFF00);
     }
 
     RenderColorBuffer();
