@@ -43,7 +43,6 @@ Renderer::Renderer() {
                                 WINDOW_HEIGHT);
 
     cameraPos = {0, 0, -5};
-    cubeRotation = {0, 0, 0};
 
 }
 
@@ -65,24 +64,20 @@ void Renderer::Update() {
 
     millisecsPreviousFrame = SDL_GetTicks();
 
-    cubeRotation.x += 0.01;
-    cubeRotation.y += 0.01;
-    cubeRotation.z += 0.01;
+    mesh.UpdateRotation(0.01);
 
-    for (int i = 0; i < N_MESH_FACES; i++) {
-        TriangleFace meshFace = meshFaces[i];
-
+    for (const auto& meshFace: mesh.GetFaces()) {
         Vec3 faceVertices[3];
-        faceVertices[0] = meshVertices[meshFace.a - 1];
-        faceVertices[1] = meshVertices[meshFace.b - 1];
-        faceVertices[2] = meshVertices[meshFace.c - 1];
+        faceVertices[0] = mesh.GetVertices()[meshFace.a - 1];
+        faceVertices[1] = mesh.GetVertices()[meshFace.b - 1];
+        faceVertices[2] = mesh.GetVertices()[meshFace.c - 1];
 
         Triangle projectedTriangle;
         // Loop all three vertices of this current face and apply transformations
         for (int j = 0; j < 3; ++j) {
             Vec3 transformedVertex = faceVertices[j];
 
-            transformedVertex = transformedVertex.Rotate(cubeRotation.x, cubeRotation.y, cubeRotation.z);
+            transformedVertex = transformedVertex.Rotate(mesh.GetRotationX(), mesh.GetRotationY(), mesh.GetRotationZ());
 
             // Translate the vertex away from the camera
             transformedVertex.z -= cameraPos.z;
@@ -98,7 +93,7 @@ void Renderer::Update() {
 
         }
 
-        trianglesToRender[i] = projectedTriangle;
+        trianglesToRender.emplace_back(projectedTriangle);
     }
 }
 
@@ -125,7 +120,9 @@ void Renderer::Render() {
     }
 
     RenderColorBuffer();
+
     Clear(0xFF000000);
+    trianglesToRender.clear();
 
     SDL_RenderPresent(renderer);
 }
