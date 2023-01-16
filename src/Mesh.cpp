@@ -1,18 +1,17 @@
 #include "Mesh.h"
 
-
-Vec3 meshVertices[N_MESH_VERTICES] = {
+Vec3 cubeVertices[N_CUBE_VERTICES] = {
         {-1, -1, -1}, // 1
-        {-1,  1, -1}, // 2
-        { 1,  1, -1}, // 3
-        { 1, -1, -1}, // 4
-        { 1,  1,  1}, // 5
-        { 1, -1,  1}, // 6
-        {-1,  1,  1}, // 7
-        {-1, -1,  1}  // 8
+        {-1, 1,  -1}, // 2
+        {1,  1,  -1}, // 3
+        {1,  -1, -1}, // 4
+        {1,  1,  1}, // 5
+        {1,  -1, 1}, // 6
+        {-1, 1,  1}, // 7
+        {-1, -1, 1}  // 8
 };
 
-TriangleFace meshFaces[N_MESH_FACES] = {
+TriangleFace cubeFaces[N_CUBE_FACES] = {
         // front
         {1, 2, 3},
         {1, 3, 4},
@@ -32,5 +31,3 @@ TriangleFace meshFaces[N_MESH_FACES] = {
         {6, 8, 1},
         {6, 1, 4}
 };
-
-
