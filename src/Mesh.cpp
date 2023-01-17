@@ -13,9 +13,9 @@ void Mesh::SetData(std::vector<Vec3>& vertices, std::vector<TriangleFace>& faces
 }
 
 void Mesh::UpdateRotation(float angle) {
-    m_rotation.x += angle;
-    m_rotation.y += angle;
-    m_rotation.z += angle;
+    UpdateRotationX(angle);
+    UpdateRotationY(angle);
+    UpdateRotationZ(angle);
 }
 
 std::vector<TriangleFace>& Mesh::GetFaces() {
@@ -36,4 +36,16 @@ float Mesh::GetRotationY() const {
 
 float Mesh::GetRotationZ() const {
     return m_rotation.z;
+}
+
+void Mesh::UpdateRotationX(float angle) {
+    m_rotation.x += angle;
+}
+
+void Mesh::UpdateRotationY(float angle) {
+    m_rotation.y += angle;
+}
+
+void Mesh::UpdateRotationZ(float angle) {
+    m_rotation.z += angle;
 }
