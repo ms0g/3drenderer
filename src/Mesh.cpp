@@ -1,33 +1,39 @@
 #include "Mesh.h"
 
-Vec3 cubeVertices[N_CUBE_VERTICES] = {
-        {-1, -1, -1}, // 1
-        {-1, 1,  -1}, // 2
-        {1,  1,  -1}, // 3
-        {1,  -1, -1}, // 4
-        {1,  1,  1}, // 5
-        {1,  -1, 1}, // 6
-        {-1, 1,  1}, // 7
-        {-1, -1, 1}  // 8
-};
 
-TriangleFace cubeFaces[N_CUBE_FACES] = {
-        // front
-        {1, 2, 3},
-        {1, 3, 4},
-        // right
-        {4, 3, 5},
-        {4, 5, 6},
-        // back
-        {6, 5, 7},
-        {6, 7, 8},
-        // left
-        {8, 7, 2},
-        {8, 2, 1},
-        // top
-        {2, 7, 5},
-        {2, 5, 3},
-        // bottom
-        {6, 8, 1},
-        {6, 1, 4}
-};
+void Mesh::SetData(std::vector<Vec3>& vertices, std::vector<TriangleFace>& faces) {
+    m_rotation = {0, 0, 0};
+
+    // Fill vertices
+    m_vertices = vertices;
+
+    // Fill faces
+    m_faces = faces;
+
+}
+
+void Mesh::UpdateRotation(float angle) {
+    m_rotation.x += angle;
+    m_rotation.y += angle;
+    m_rotation.z += angle;
+}
+
+std::vector<TriangleFace>& Mesh::GetFaces() {
+    return m_faces;
+}
+
+std::vector<Vec3>& Mesh::GetVertices() {
+    return m_vertices;
+}
+
+float Mesh::GetRotationX() const {
+    return m_rotation.x;
+}
+
+float Mesh::GetRotationY() const {
+    return m_rotation.y;
+}
+
+float Mesh::GetRotationZ() const {
+    return m_rotation.z;
+}
