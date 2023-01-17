@@ -2,7 +2,7 @@
 
 
 int main() {
-    Renderer renderer;
+    Renderer renderer{"../assets/f22.obj"};
     SDL_Event event;
     bool isRunning{true};
 

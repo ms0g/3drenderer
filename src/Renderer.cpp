@@ -1,7 +1,9 @@
 #include "Renderer.h"
 #include <iostream>
+#include "ObjParser.h"
+#include "MeshData.hpp"
 
-Renderer::Renderer() {
+Renderer::Renderer(const std::string& objFile) {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         std::cerr << "Error initializing SDL" << std::endl;
         return;
@@ -44,6 +46,9 @@ Renderer::Renderer() {
 
     cameraPos = {0, 0, -5};
 
+    // Load Mesh data
+    auto meshData = ObjParser::Load(objFile);
+    mesh.SetData(meshData.vertices, meshData.faces);
 }
 
 

@@ -1,5 +1,6 @@
 #include <array>
 #include <SDL2/SDL.h>
+#include <string>
 #include <vector>
 #include "Vec3.h"
 #include "Vec2.h"
@@ -10,7 +11,7 @@
 
 class Renderer {
 public:
-    Renderer();
+    explicit Renderer(const std::string& objFile);
 
     ~Renderer();
 
@@ -36,7 +37,7 @@ private:
 
     void Clear(color_t color);
 
-    Mesh<N_CUBE_VERTICES, N_CUBE_FACES> mesh{cubeVertices, cubeFaces, {0, 0, 0}};
+    Mesh mesh{};
 
     Vec3 cameraPos;
 
@@ -46,7 +47,6 @@ private:
     SDL_Texture* texture{};
     std::array<color_t, WINDOW_WIDTH * WINDOW_HEIGHT> colorBuffer{};
 
-    static constexpr int N_POINTS = (9 * 9 * 9);
     static constexpr float fov_factor = 640;
 
     std::vector<Triangle> trianglesToRender;
