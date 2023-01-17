@@ -1,14 +1,15 @@
 #include "Mesh.h"
+#include "MeshData.hpp"
 
 
-void Mesh::SetData(std::vector<Vec3>& vertices, std::vector<TriangleFace>& faces) {
+void Mesh::SetData(MeshData& meshData) {
     m_rotation = {0, 0, 0};
 
     // Fill vertices
-    m_vertices = vertices;
+    m_vertices = meshData.vertices;
 
     // Fill faces
-    m_faces = faces;
+    m_faces = meshData.faces;
 
 }
 

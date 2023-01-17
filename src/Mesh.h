@@ -4,12 +4,12 @@
 #include "Vec3.h"
 #include "Triangle.h"
 
-
+class MeshData;
 class Mesh {
 public:
     Mesh() = default;
 
-    void SetData(std::vector<Vec3>& vertices, std::vector<TriangleFace>& faces);
+    void SetData(MeshData& meshData);
 
     void UpdateRotation(float angle);
 

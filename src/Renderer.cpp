@@ -48,7 +48,7 @@ Renderer::Renderer(const std::string& objFile) {
 
     // Load Mesh data
     auto meshData = ObjParser::Load(objFile);
-    mesh.SetData(meshData.vertices, meshData.faces);
+    mesh.SetData(meshData);
 }
 
 
