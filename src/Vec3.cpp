@@ -87,10 +87,6 @@ Vec3 Vec3::UnitVector() const {
     return result;
 }
 
-//Vec3 Vec3::Normal() const {
-//    return Vec3(y, -x, z).Normalize();
-//}
-
 float Vec3::Dot(const Vec3& v) const {
     return (x * v.x) + (y * v.y) + (z * v.z);
 }
