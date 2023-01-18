@@ -1,7 +1,7 @@
 #include "Vec3.h"
 #include <cmath>
 
-Vec3::Vec3() : x(0.0), y(0.0) {}
+Vec3::Vec3() : x(0.0), y(0.0), z(0.0) {}
 
 Vec3::Vec3(float x, float y, float z) : x(x), y(y), z(z) {}
 
@@ -32,9 +32,9 @@ Vec3 Vec3::Rotate(const float angleX, const float angleY, const float angleZ) co
 
 Vec3 Vec3::RotateX(float angle) const {
     Vec3 result = {
-        x,
-        y * cos(angle) - z * sin(angle),
-        y * sin(angle) + z * cos(angle)
+            x,
+            y * cos(angle) - z * sin(angle),
+            y * sin(angle) + z * cos(angle)
 
     };
     return result;
@@ -95,8 +95,12 @@ float Vec3::Dot(const Vec3& v) const {
     return (x * v.x) + (y * v.y) + (z * v.z);
 }
 
-float Vec3::Cross(const Vec3& v) const {
-    return (x * v.y) - (y * v.x);
+Vec3 Vec3::Cross(const Vec3& v) const {
+    Vec3 result;
+    result.x = y * v.z - z * v.y;
+    result.y = z * v.x - x * v.z;
+    result.z = x * v.y - y * v.x;
+    return result;
 }
 
 Vec3& Vec3::operator=(const Vec3& v) = default;
