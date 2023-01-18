@@ -44,7 +44,7 @@ Renderer::Renderer(const std::string& objFile) {
                                 WINDOW_WIDTH,
                                 WINDOW_HEIGHT);
 
-    cameraPos = {0, 0, -5};
+    cameraPos = {0, 0, 0};
 
     // Load Mesh data
     auto meshData = ObjParser::Load(objFile);
@@ -77,27 +77,57 @@ void Renderer::Update() {
         faceVertices[1] = mesh.GetVertices()[meshFace.b - 1];
         faceVertices[2] = mesh.GetVertices()[meshFace.c - 1];
 
-        Triangle projectedTriangle;
+        Vec3 transformedVertices[3];
         // Loop all three vertices of this current face and apply transformations
-        for (int j = 0; j < 3; ++j) {
-            Vec3 transformedVertex = faceVertices[j];
+        for (int i = 0; i < 3; ++i) {
+            Vec3 transformedVertex = faceVertices[i];
 
             transformedVertex = transformedVertex.Rotate(mesh.GetRotationX(), mesh.GetRotationY(), mesh.GetRotationZ());
 
             // Translate the vertex away from the camera
-            transformedVertex.z -= cameraPos.z;
+            transformedVertex.z += 5;
+            transformedVertices[i] = transformedVertex;
+        }
 
+        // Check backface culling
+        Vec3 vecA = transformedVertices[0];     /*    A    */
+        Vec3 vecB = transformedVertices[1];     /*  /   \  */
+        Vec3 vecC = transformedVertices[2];     /* C-----B */
+
+        // Get the vector subtraction of B-A and C-A
+        Vec3 ab = vecB - vecA;
+        Vec3 ac = vecC - vecA;
+        ab.Normalize();
+        ac.Normalize();
+
+        // Compute the face normal
+        Vec3 normal = ab.Cross(ac);
+        normal.Normalize();
+
+        // Find the vector between a point in the triangle and camera origin
+        Vec3 cameraRay = cameraPos - vecA;
+
+        // Calculate how aligned the normal onto the camera ray
+        float dotNormalCamera = normal.Dot(cameraRay);
+
+        // Bypass the triangles that are looking away the camera
+        if (dotNormalCamera < 0) {
+            continue;
+        }
+
+        Triangle projectedTriangle;
+        // Loop all three vertices to perform projection
+        for (int i = 0; i < 3; ++i) {
             // Project the current vertex
-            Vec2 projectedPoint = Project(transformedVertex);
+            Vec2 projectedPoint = Project(transformedVertices[i]);
 
             // Scale and translate the projected points to the middle of the screen
             projectedPoint.x += (WINDOW_WIDTH / 2);
             projectedPoint.y += (WINDOW_HEIGHT / 2);
 
-            projectedTriangle.points[j] = projectedPoint;
+            projectedTriangle.points[i] = projectedPoint;
 
         }
-
         trianglesToRender.emplace_back(projectedTriangle);
     }
 }
