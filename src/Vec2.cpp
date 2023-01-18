@@ -63,10 +63,6 @@ float Vec2::Dot(const Vec2& v) const {
     return (x * v.x) + (y * v.y);
 }
 
-float Vec2::Cross(const Vec2& v) const {
-    return (x * v.y) - (y * v.x);
-}
-
 Vec2& Vec2::operator=(const Vec2& v) = default;
 
 bool Vec2::operator==(const Vec2& v) const {

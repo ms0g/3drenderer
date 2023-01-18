@@ -2,8 +2,7 @@
 
 
 struct Vec2 {
-    float x;
-    float y;
+    float x, y;
 
     Vec2();
 
@@ -24,7 +23,6 @@ struct Vec2 {
     [[nodiscard]] Vec2 Normal() const;                  // n = v1.Normal()
 
     [[nodiscard]] float Dot(const Vec2& v) const;       // v1.Dot(v2)
-    [[nodiscard]] float Cross(const Vec2& v) const;     // v1.Cross(v2)
 
     Vec2& operator=(const Vec2& v);                     // v1 = v2
     bool operator==(const Vec2& v) const;               // v1 == v2
