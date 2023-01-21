@@ -7,9 +7,11 @@
 #include "Mesh.h"
 #include "Triangle.h"
 #include "Constants.hpp"
+#include "Settings.hpp"
 
 
 class Graphics;
+class Gui;
 class Renderer {
 public:
     explicit Renderer(const std::string& objFile);
@@ -26,6 +28,7 @@ private:
     Vec2 Project(Vec3 point);
 
     std::unique_ptr<Graphics> graphics;
+    std::unique_ptr<Gui> gui;
 
     Mesh mesh{};
 
@@ -34,11 +37,12 @@ private:
     SDL_Window* window{};
     SDL_Renderer* renderer{};
 
-    static constexpr float fov_factor = 640;
+    Settings settings;
 
     std::vector<Triangle> trianglesToRender;
 
     uint32_t millisecsPreviousFrame{0};
+    static constexpr float fov_factor = 640;
     static constexpr int FPS = 60;
     static constexpr int MILLISECS_PER_FRAME = 1000 / FPS;
 };

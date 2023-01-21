@@ -2,6 +2,7 @@
 #include <iostream>
 #include "ObjParser.h"
 #include "Graphics.h"
+#include "Gui.h"
 #include "MeshData.hpp"
 
 Renderer::Renderer(const std::string& objFile) {
@@ -38,6 +39,7 @@ Renderer::Renderer(const std::string& objFile) {
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 
+    // Camera settings
     cameraPos = {0, 0, 0};
 
     // Load Mesh data
@@ -46,6 +48,13 @@ Renderer::Renderer(const std::string& objFile) {
 
     // Create color buffer
     graphics = std::make_unique<Graphics>(renderer);
+
+    // Create Gui
+    gui = std::make_unique<Gui>(window, renderer);
+
+    // Render settings
+    settings.cullMethod = CULLMethod::CULL_BACKFACE;
+    settings.renderMethod = RenderMethod::RENDER_WIRE;
 }
 
 
@@ -84,29 +93,31 @@ void Renderer::Update() {
         }
 
         // Check backface culling
-        Vec3 vecA = transformedVertices[0];     /*    A    */
-        Vec3 vecB = transformedVertices[1];     /*  /   \  */
-        Vec3 vecC = transformedVertices[2];     /* C-----B */
+        if (settings.cullMethod == CULLMethod::CULL_BACKFACE) {
+            Vec3 vecA = transformedVertices[0];     /*    A    */
+            Vec3 vecB = transformedVertices[1];     /*  /   \  */
+            Vec3 vecC = transformedVertices[2];     /* C-----B */
 
-        // Get the vector subtraction of B-A and C-A
-        Vec3 ab = vecB - vecA;
-        Vec3 ac = vecC - vecA;
-        ab.Normalize();
-        ac.Normalize();
+            // Get the vector subtraction of B-A and C-A
+            Vec3 ab = vecB - vecA;
+            Vec3 ac = vecC - vecA;
+            ab.Normalize();
+            ac.Normalize();
 
-        // Compute the face normal
-        Vec3 normal = ab.Cross(ac);
-        normal.Normalize();
+            // Compute the face normal
+            Vec3 normal = ab.Cross(ac);
+            normal.Normalize();
 
-        // Find the vector between a point in the triangle and camera origin
-        Vec3 cameraRay = cameraPos - vecA;
+            // Find the vector between a point in the triangle and camera origin
+            Vec3 cameraRay = cameraPos - vecA;
 
-        // Calculate how aligned the normal onto the camera ray
-        float dotNormalCamera = normal.Dot(cameraRay);
+            // Calculate how aligned the normal onto the camera ray
+            float dotNormalCamera = normal.Dot(cameraRay);
 
-        // Bypass the triangles that are looking away the camera
-        if (dotNormalCamera < 0) {
-            continue;
+            // Bypass the triangles that are looking away the camera
+            if (dotNormalCamera < 0) {
+                continue;
+            }
         }
 
         Triangle projectedTriangle;
@@ -131,22 +142,34 @@ void Renderer::Render() {
 
     // Loop all projected triangles and render them
     for (auto& triangle: trianglesToRender) {
+        if (settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE ||
+            settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE_WIRE) {
+            triangle.FillWithColor(*graphics, 0xFF555555);
+        }
 
-        triangle.FillWithColor(*graphics, 0xFFFFFFFF);
+        if (settings.renderMethod == RenderMethod::RENDER_WIRE ||
+            settings.renderMethod == RenderMethod::RENDER_WIRE_VERTEX ||
+            settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE_WIRE) {
+            graphics->DrawTriangle(
+                    triangle.points[0].x,
+                    triangle.points[0].y,
+                    triangle.points[1].x,
+                    triangle.points[1].y,
+                    triangle.points[2].x,
+                    triangle.points[2].y,
+                    0xFFFFFFFF
+            );
+        }
 
-        // Draw unfilled triangles
-        graphics->DrawTriangle(
-                triangle.points[0].x,
-                triangle.points[0].y,
-                triangle.points[1].x,
-                triangle.points[1].y,
-                triangle.points[2].x,
-                triangle.points[2].y,
-                0xFF000000
-        );
+        if (settings.renderMethod == RenderMethod::RENDER_WIRE_VERTEX) {
+            graphics->DrawRect(triangle.points[0].x - 3, triangle.points[0].y, 6, 6, 0xFFFF0000);
+            graphics->DrawRect(triangle.points[1].x - 3, triangle.points[1].y, 6, 6, 0xFFFF0000);
+            graphics->DrawRect(triangle.points[2].x - 3, triangle.points[2].y, 6, 6, 0xFFFF0000);
+        }
     }
 
     graphics->Render(renderer);
+    gui->Render(settings);
 
     graphics->Clear(0xFF000000);
     trianglesToRender.clear();
