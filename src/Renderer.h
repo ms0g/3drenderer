@@ -9,6 +9,7 @@
 #include "Constants.hpp"
 
 
+class Graphics;
 class Renderer {
 public:
     explicit Renderer(const std::string& objFile);
@@ -20,22 +21,11 @@ public:
     void Render();
 
 private:
-
     void DrawGrid();
 
     Vec2 Project(Vec3 point);
 
-    void RenderColorBuffer();
-
-    void PutPixel(int x, int y, color_t color);
-
-    void DrawRect(int x, int y, int width, int height, color_t color);
-
-    void DrawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color);
-
-    void DDA(int x0, int y0, int x1, int y1, color_t color);
-
-    void Clear(color_t color);
+    std::unique_ptr<Graphics> graphics;
 
     Mesh mesh{};
 
@@ -44,9 +34,6 @@ private:
     SDL_Window* window{};
     SDL_Renderer* renderer{};
 
-    SDL_Texture* texture{};
-    std::array<color_t, WINDOW_WIDTH * WINDOW_HEIGHT> colorBuffer{};
-
     static constexpr float fov_factor = 640;
 
     std::vector<Triangle> trianglesToRender;
@@ -54,7 +41,5 @@ private:
     uint32_t millisecsPreviousFrame{0};
     static constexpr int FPS = 60;
     static constexpr int MILLISECS_PER_FRAME = 1000 / FPS;
-
-
 };
 
