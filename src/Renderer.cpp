@@ -132,8 +132,16 @@ void Renderer::Update() {
 
             projectedTriangle.points[i] = projectedPoint;
         }
+        //TODO:remove after z-buffer
+        float avgDepth = (transformedVertices[0].z + transformedVertices[1].z + transformedVertices[2].z) / 3.0;
+        projectedTriangle.avgDepth = avgDepth;
+
         trianglesToRender.emplace_back(projectedTriangle);
     }
+
+    std::sort(trianglesToRender.begin(), trianglesToRender.end(), [](const Triangle& t1, const Triangle& t2) {
+        return t1.avgDepth > t2.avgDepth;
+    });
 }
 
 void Renderer::Render() {
