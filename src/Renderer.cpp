@@ -131,7 +131,6 @@ void Renderer::Update() {
             projectedPoint.y += (WINDOW_HEIGHT / 2);
 
             projectedTriangle.points[i] = projectedPoint;
-
         }
         trianglesToRender.emplace_back(projectedTriangle);
     }
@@ -144,19 +143,21 @@ void Renderer::Render() {
     for (auto& triangle: trianglesToRender) {
         if (settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE ||
             settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE_WIRE) {
-            triangle.FillWithColor(*graphics, 0xFF555555);
+            graphics->FillTriangle(
+                    triangle.points[0].x, triangle.points[0].y,
+                    triangle.points[1].x, triangle.points[1].y,
+                    triangle.points[2].x, triangle.points[2].y,
+                    0xFF555555
+            );
         }
 
         if (settings.renderMethod == RenderMethod::RENDER_WIRE ||
             settings.renderMethod == RenderMethod::RENDER_WIRE_VERTEX ||
             settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE_WIRE) {
             graphics->DrawTriangle(
-                    triangle.points[0].x,
-                    triangle.points[0].y,
-                    triangle.points[1].x,
-                    triangle.points[1].y,
-                    triangle.points[2].x,
-                    triangle.points[2].y,
+                    triangle.points[0].x, triangle.points[0].y,
+                    triangle.points[1].x, triangle.points[1].y,
+                    triangle.points[2].x, triangle.points[2].y,
                     0xFFFFFFFF
             );
         }

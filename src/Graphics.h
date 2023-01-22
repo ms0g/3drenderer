@@ -22,6 +22,8 @@ public:
 
     void DrawPixel(int x, int y, color_t color);
 
+    void FillTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color);
+
     void FillFlatBottomTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color);
 
     void FillFlatTopTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color);

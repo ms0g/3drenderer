@@ -64,6 +64,65 @@ void Graphics::DrawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, colo
 }
 
 
+//////////////////////////////////////////////////////////////////////////////
+// Draw a filled triangle with the flat-top/flat-bottom method
+// We split the original triangle in two, half flat-bottom and half flat-top
+///////////////////////////////////////////////////////////////////////////////
+//
+//          (x0,y0)
+//            / \
+//           /   \
+//          /     \
+//         /       \
+//        /         \
+//   (x1,y1)------(Mx,My)
+//       \_           \
+//          \_         \
+//             \_       \
+//                \_     \
+//                   \    \
+//                     \_  \
+//                        \_\
+//                           \
+//                         (x2,y2)
+//
+///////////////////////////////////////////////////////////////////////////////
+void Graphics::FillTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color) {
+    if (y0 > y1) {
+        std::swap(y0, y1);
+        std::swap(x0, x1);
+    }
+
+    if (y1 > y2) {
+        std::swap(y1, y2);
+        std::swap(x1, x2);
+    }
+
+    if (y0 > y1) {
+        std::swap(y0, y1);
+        std::swap(x0, x1);
+    }
+
+    if (y1 == y2) {
+        // Draw flat-bottom triangle
+        FillFlatBottomTriangle(x0, y0, x1, y1, x2, y2, color);
+    } else if (y0 == y1) {
+        // Draw flat-top triangle
+        FillFlatTopTriangle(x0, y0, x1, y1, x2, y2, color);
+    } else {
+        // Calculate the new vertex (Mx,My) using triangle similarity
+        int My = y1;
+        int Mx = (((x2 - x0) * (y1 - y0)) / (y2 - y0)) + x0;
+
+        // Draw flat-bottom triangle
+        FillFlatBottomTriangle(x0, y0, x1, y1, Mx, My, color);
+
+        // Draw flat-top triangle
+        FillFlatTopTriangle(x1, y1, Mx, My, x2, y2, color);
+    }
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // Draw a filled a triangle with a flat bottom
 ///////////////////////////////////////////////////////////////////////////////
