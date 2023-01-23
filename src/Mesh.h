@@ -2,7 +2,7 @@
 
 #include <vector>
 #include "Vec3.h"
-#include "Triangle.h"
+#include "Triangle.hpp"
 
 class MeshData;
 class Mesh {

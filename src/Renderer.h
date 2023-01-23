@@ -5,7 +5,7 @@
 #include "Vec3.h"
 #include "Vec2.h"
 #include "Mesh.h"
-#include "Triangle.h"
+#include "Triangle.hpp"
 #include "Constants.hpp"
 #include "Settings.hpp"
 

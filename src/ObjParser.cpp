@@ -1,6 +1,5 @@
 #include "ObjParser.h"
 #include "Vec3.h"
-#include "Triangle.h"
 #include "MeshData.hpp"
 
 MeshData ObjParser::Load(const std::string& fileName) {
