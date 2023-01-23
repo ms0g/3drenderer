@@ -33,17 +33,17 @@ void Gui::Render(Settings& settings) {
 //    ImGui::ShowDemoWindow(&show_demo_window);
 
     if (ImGui::Begin("Render Settings")) {
-        if (ImGui::Button("CB")) {
+        if (ImGui::Button("Culling Backface")) {
             settings.cullMethod = CULLMethod::CULL_BACKFACE;
-        } else if (ImGui::Button("CN")) {
+        } else if (ImGui::Button("Culling None")) {
             settings.cullMethod = CULLMethod::CULL_NONE;
-        } else if (ImGui::Button("RW")) {
+        } else if (ImGui::Button("Render Wire")) {
             settings.renderMethod = RenderMethod::RENDER_WIRE;
-        } else if (ImGui::Button("RWV")) {
+        } else if (ImGui::Button("Render Wire Vertex")) {
             settings.renderMethod = RenderMethod::RENDER_WIRE_VERTEX;
-        } else if (ImGui::Button("RFT")) {
+        } else if (ImGui::Button("Render Fill Triangle")) {
             settings.renderMethod = RenderMethod::RENDER_FILL_TRIANGLE;
-        } else if (ImGui::Button("RFTW")) {
+        } else if (ImGui::Button("Render Fill Triangle Wire")) {
             settings.renderMethod = RenderMethod::RENDER_FILL_TRIANGLE_WIRE;
         }
     }
