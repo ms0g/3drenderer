@@ -138,7 +138,7 @@ void Renderer::Update() {
 
         trianglesToRender.emplace_back(projectedTriangle);
     }
-
+    //TODO:remove after z-buffer
     std::sort(trianglesToRender.begin(), trianglesToRender.end(), [](const Triangle& t1, const Triangle& t2) {
         return t1.avgDepth > t2.avgDepth;
     });
