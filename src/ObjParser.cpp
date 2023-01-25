@@ -13,7 +13,7 @@ MeshData ObjParser::Load(const std::string& fileName) {
         if (strncmp(line, "v ", 2) == 0) {
             Vec3 vertex;
             sscanf(line, "v %f %f %f", &vertex.x, &vertex.y, &vertex.z);
-            data.vertices.emplace_back(vertex);
+            data.vertices.push_back(vertex);
         }
         // Face information
         if (strncmp(line, "f ", 2) == 0) {
@@ -31,7 +31,7 @@ MeshData ObjParser::Load(const std::string& fileName) {
                     vertex_indices[1],
                     vertex_indices[2]
             };
-            data.faces.emplace_back(face);
+            data.faces.push_back(face);
         }
     }
     return data;

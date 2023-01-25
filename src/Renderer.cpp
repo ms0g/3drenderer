@@ -136,7 +136,7 @@ void Renderer::Update() {
         float avgDepth = (transformedVertices[0].z + transformedVertices[1].z + transformedVertices[2].z) / 3.0;
         projectedTriangle.avgDepth = avgDepth;
 
-        trianglesToRender.emplace_back(projectedTriangle);
+        trianglesToRender.push_back(projectedTriangle);
     }
     //TODO:remove after z-buffer
     std::sort(trianglesToRender.begin(), trianglesToRender.end(), [](const Triangle& t1, const Triangle& t2) {
