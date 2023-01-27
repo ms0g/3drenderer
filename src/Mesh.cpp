@@ -53,6 +53,18 @@ float Mesh::GetRotationZ() const {
     return m_rotation.z;
 }
 
+void Mesh::SetRotationX(float angle) {
+    m_rotation.x = angle;
+}
+
+void Mesh::SetRotationY(float angle) {
+    m_rotation.y = angle;
+}
+
+void Mesh::SetRotationZ(float angle) {
+    m_rotation.z = angle;
+}
+
 void Mesh::UpdateScale(float scalar) {
     UpdateScaleX(scalar);
     UpdateScaleY(scalar);
@@ -83,6 +95,18 @@ float Mesh::GetScaleZ() const {
     return m_scale.z;
 }
 
+void Mesh::SetScaleX(float scalar) {
+    m_scale.x = scalar;
+}
+
+void Mesh::SetScaleY(float scalar) {
+    m_scale.y = scalar;
+}
+
+void Mesh::SetScaleZ(float scalar) {
+    m_scale.z = scalar;
+}
+
 void Mesh::UpdateTranslation(float coord) {
     UpdateTranslationX(coord);
     UpdateTranslationY(coord);
@@ -111,4 +135,16 @@ float Mesh::GetTranslationY() const {
 
 float Mesh::GetTranslationZ() const {
     return m_translation.z;
+}
+
+void Mesh::SetTranslationX(float coord) {
+    m_translation.x = coord;
+}
+
+void Mesh::SetTranslationY(float coord) {
+    m_translation.y = coord;
+}
+
+void Mesh::SetTranslationZ(float coord) {
+    m_translation.z = coord;
 }

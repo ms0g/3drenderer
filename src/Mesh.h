@@ -25,6 +25,12 @@ public:
 
     [[nodiscard]] float GetRotationZ() const;
 
+    void SetRotationX(float angle);
+
+    void SetRotationY(float angle);
+
+    void SetRotationZ(float angle);
+
     void UpdateScale(float scalar);
 
     void UpdateScaleX(float scalar);
@@ -39,6 +45,12 @@ public:
 
     [[nodiscard]] float GetScaleZ() const;
 
+    void SetScaleX(float scalar);
+
+    void SetScaleY(float scalar);
+
+    void SetScaleZ(float scalar);
+
     void UpdateTranslation(float coord);
 
     void UpdateTranslationX(float coord);
@@ -52,6 +64,12 @@ public:
     [[nodiscard]] float GetTranslationY() const;
 
     [[nodiscard]] float GetTranslationZ() const;
+
+    void SetTranslationX(float coord);
+
+    void SetTranslationY(float coord);
+
+    void SetTranslationZ(float coord);
 
     [[nodiscard]] std::vector<TriangleFace>& GetFaces();
 
