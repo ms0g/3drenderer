@@ -10,16 +10,30 @@ Mat4 Mat4::IdentityMatrix() {
     }};
 }
 
-Mat4 Mat4::ScaleMatrix(float x, float y, float z) {
+Mat4 Mat4::ScaleMatrix(float sx, float sy, float sz) {
     // | sx  0  0  0 |
     // |  0 sy  0  0 |
     // |  0  0 sz  0 |
     // |  0  0  0  1 |
     Mat4 _m = IdentityMatrix();
 
-    _m.m[0][0] = x;
-    _m.m[1][1] = y;
-    _m.m[2][2] = z;
+    _m.m[0][0] = sx;
+    _m.m[1][1] = sy;
+    _m.m[2][2] = sz;
+
+    return _m;
+}
+
+Mat4 Mat4::TranslationMatrix(float tx, float ty, float tz) {
+    // |  1  0  0  tx |
+    // |  0  1  0  ty |
+    // |  0  0  1  tz |
+    // |  0  0  0  1  |
+    Mat4 _m = IdentityMatrix();
+
+    _m.m[0][3] = tx;
+    _m.m[1][3] = ty;
+    _m.m[2][3] = tz;
 
     return _m;
 }

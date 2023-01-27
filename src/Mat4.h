@@ -9,7 +9,9 @@ struct Mat4 {
 
     static Mat4 IdentityMatrix();
 
-    static Mat4 ScaleMatrix(float x, float y, float z);
+    static Mat4 ScaleMatrix(float sx, float sy, float sz);
+
+    static Mat4 TranslationMatrix(float tx, float ty, float tz);
 
     Vec4 operator*(Vec4 v) const;
 };
