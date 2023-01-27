@@ -20,6 +20,8 @@ struct Mat4 {
     static Mat4 RotationYMatrix(float angle);
 
     Vec4 operator*(Vec4 v) const;
+
+    Mat4 operator*(Mat4 v) const;
 };
 
 
