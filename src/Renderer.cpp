@@ -77,9 +77,15 @@ void Renderer::Update() {
     mesh.UpdateRotation(0.01);
 
     mesh.UpdateScaleX(0.002);
+    mesh.UpdateTranslationX(0.01);
+    // Translate the mesh away from the camera
+    mesh.SetTranslationZ(5);
 
     // Create scale matrix that will be used to multiply the mesh vertices;
     Mat4 scaleMatrix = Mat4::ScaleMatrix(mesh.GetScaleX(), mesh.GetScaleY(), mesh.GetScaleZ());
+    Mat4 translationMatrix = Mat4::TranslationMatrix(mesh.GetTranslationX(),
+                                                     mesh.GetTranslationY(),
+                                                     mesh.GetTranslationZ());
 
     for (const auto& meshFace: mesh.GetFaces()) {
         Vec3 faceVertices[3];
@@ -94,11 +100,10 @@ void Renderer::Update() {
 
             // Use a matrix to scale our original vertex
             transformedVertex = scaleMatrix * transformedVertex;
+            transformedVertex = translationMatrix * transformedVertex;
 
             //transformedVertex = transformedVertex.Rotate(mesh.GetRotationX(), mesh.GetRotationY(), mesh.GetRotationZ());
 
-            // Translate the vertex away from the camera
-            transformedVertex.z += 5;
             transformedVertices[i] = transformedVertex;
         }
 
