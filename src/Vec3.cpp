@@ -1,5 +1,6 @@
 #include "Vec3.h"
 #include <cmath>
+#include "Vec4.h"
 
 Vec3::Vec3() : x(0.0), y(0.0), z(0.0) {}
 
@@ -85,6 +86,10 @@ Vec3 Vec3::UnitVector() const {
         result.z = z / length;
     }
     return result;
+}
+
+Vec3 Vec3::FromVec4(Vec4 v) {
+    return {v.x, v.y, v.z};
 }
 
 float Vec3::Dot(const Vec3& v) const {

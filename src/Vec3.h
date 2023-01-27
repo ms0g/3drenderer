@@ -1,6 +1,7 @@
 #pragma once
 
 
+class Vec4;
 struct Vec3 {
     float x, y, z;
 
@@ -25,6 +26,8 @@ struct Vec3 {
 
     Vec3& Normalize();                                  // v1.Normalize()
     [[nodiscard]] Vec3 UnitVector() const;              // v1.UnitVector()
+
+    static Vec3 FromVec4(Vec4 v) ;
 
     [[nodiscard]] float Dot(const Vec3& v) const;       // v1.Dot(v2)
     [[nodiscard]] Vec3 Cross(const Vec3& v) const;      // v1.Cross(v2)
