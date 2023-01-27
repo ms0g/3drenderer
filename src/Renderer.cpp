@@ -4,6 +4,8 @@
 #include "Graphics.h"
 #include "Gui.h"
 #include "MeshData.hpp"
+#include "Vec4.h"
+#include "Mat4.h"
 
 Renderer::Renderer(const std::string& objFile) {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -74,18 +76,26 @@ void Renderer::Update() {
 
     mesh.UpdateRotation(0.01);
 
+    mesh.UpdateScaleX(0.002);
+
+    // Create scale matrix that will be used to multiply the mesh vertices;
+    Mat4 scaleMatrix = Mat4::ScaleMatrix(mesh.GetScaleX(), mesh.GetScaleY(), mesh.GetScaleZ());
+
     for (const auto& meshFace: mesh.GetFaces()) {
         Vec3 faceVertices[3];
         faceVertices[0] = mesh.GetVertices()[meshFace.a - 1];
         faceVertices[1] = mesh.GetVertices()[meshFace.b - 1];
         faceVertices[2] = mesh.GetVertices()[meshFace.c - 1];
 
-        Vec3 transformedVertices[3];
+        Vec4 transformedVertices[3];
         // Loop all three vertices of this current face and apply transformations
         for (int i = 0; i < 3; ++i) {
-            Vec3 transformedVertex = faceVertices[i];
+            Vec4 transformedVertex = Vec4::FromVec3(faceVertices[i]);
 
-            transformedVertex = transformedVertex.Rotate(mesh.GetRotationX(), mesh.GetRotationY(), mesh.GetRotationZ());
+            // Use a matrix to scale our original vertex
+            transformedVertex = scaleMatrix * transformedVertex;
+
+            //transformedVertex = transformedVertex.Rotate(mesh.GetRotationX(), mesh.GetRotationY(), mesh.GetRotationZ());
 
             // Translate the vertex away from the camera
             transformedVertex.z += 5;
@@ -94,9 +104,9 @@ void Renderer::Update() {
 
         // Check backface culling
         if (settings.cullMethod == CULLMethod::CULL_BACKFACE) {
-            Vec3 vecA = transformedVertices[0];     /*    A    */
-            Vec3 vecB = transformedVertices[1];     /*  /   \  */
-            Vec3 vecC = transformedVertices[2];     /* C-----B */
+            Vec3 vecA = Vec3::FromVec4(transformedVertices[0]);     /*    A    */
+            Vec3 vecB = Vec3::FromVec4(transformedVertices[1]);     /*  /   \  */
+            Vec3 vecC = Vec3::FromVec4(transformedVertices[2]);     /* C-----B */
 
             // Get the vector subtraction of B-A and C-A
             Vec3 ab = vecB - vecA;
@@ -124,7 +134,7 @@ void Renderer::Update() {
         // Loop all three vertices to perform projection
         for (int i = 0; i < 3; ++i) {
             // Project the current vertex
-            Vec2 projectedPoint = Project(transformedVertices[i]);
+            Vec2 projectedPoint = Project(Vec3::FromVec4(transformedVertices[i]));
 
             // Scale and translate the projected points to the middle of the screen
             projectedPoint.x += (WINDOW_WIDTH / 2);
