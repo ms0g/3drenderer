@@ -13,6 +13,12 @@ struct Mat4 {
 
     static Mat4 TranslationMatrix(float tx, float ty, float tz);
 
+    static Mat4 RotationZMatrix(float angle);
+
+    static Mat4 RotationXMatrix(float angle);
+
+    static Mat4 RotationYMatrix(float angle);
+
     Vec4 operator*(Vec4 v) const;
 };
 

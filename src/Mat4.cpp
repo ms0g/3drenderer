@@ -1,3 +1,4 @@
+#include <cmath>
 #include "Mat4.h"
 #include "Vec4.h"
 
@@ -34,6 +35,51 @@ Mat4 Mat4::TranslationMatrix(float tx, float ty, float tz) {
     _m.m[0][3] = tx;
     _m.m[1][3] = ty;
     _m.m[2][3] = tz;
+
+    return _m;
+}
+
+Mat4 Mat4::RotationZMatrix(float angle) {
+    // | c -s  0  0 |
+    // | s  c  0  0 |
+    // | 0  0  1  0 |
+    // | 0  0  0  1 |
+    Mat4 _m = IdentityMatrix();
+
+    _m.m[0][0] = cos(angle);
+    _m.m[0][1] = -sin(angle);
+    _m.m[1][0] = sin(angle);
+    _m.m[1][1] = cos(angle);
+
+    return _m;
+}
+
+Mat4 Mat4::RotationXMatrix(float angle) {
+    // | 1  0  0  0 |
+    // | 0  c -s  0 |
+    // | 0  s  c  0 |
+    // | 0  0  0  1 |
+    Mat4 _m = IdentityMatrix();
+
+    _m.m[1][1] = cos(angle);
+    _m.m[1][2] = -sin(angle);
+    _m.m[2][1] = sin(angle);
+    _m.m[2][2] = cos(angle);
+
+    return _m;
+}
+
+Mat4 Mat4::RotationYMatrix(float angle) {
+    // |  c  0  s  0 |
+    // |  0  1  0  0 |
+    // | -s  0  c  0 |
+    // |  0  0  0  1 |
+    Mat4 _m = IdentityMatrix();
+
+    _m.m[0][0] = cos(angle);
+    _m.m[0][2] = sin(angle);
+    _m.m[2][0] = -sin(angle);
+    _m.m[2][2] = cos(angle);
 
     return _m;
 }
