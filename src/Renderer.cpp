@@ -74,11 +74,11 @@ void Renderer::Update() {
 
     millisecsPreviousFrame = SDL_GetTicks();
 
-    mesh.UpdateRotation(0.01);
+    mesh.UpdateRotationX(0.01);
 
     //mesh.UpdateScaleX(0.002);
 
-    mesh.UpdateTranslationX(0.01);
+    //mesh.UpdateTranslationX(0.01);
     // Translate the mesh away from the camera
     mesh.SetTranslationZ(5);
 
@@ -105,12 +105,17 @@ void Renderer::Update() {
         for (int i = 0; i < 3; ++i) {
             Vec4 transformedVertex = Vec4::FromVec3(faceVertices[i]);
 
-            // Use a matrix to scale our original vertex
-            transformedVertex = scaleMatrix * transformedVertex;
-            transformedVertex = rotationXMatrix * transformedVertex;
-            transformedVertex = rotationYMatrix * transformedVertex;
-            transformedVertex = rotationZMatrix * transformedVertex;
-            transformedVertex = translationMatrix * transformedVertex;
+            // Create a World Matrix combining scale, rotation, and translation matrices
+            Mat4 worldMatrix = Mat4::IdentityMatrix();
+
+            // Order matters: First scale, then rotate, then translate. [T]*[R]*[S]*v
+            worldMatrix = scaleMatrix * worldMatrix;
+            worldMatrix = rotationZMatrix * worldMatrix;
+            worldMatrix = rotationYMatrix * worldMatrix;
+            worldMatrix = rotationXMatrix * worldMatrix;
+            worldMatrix = translationMatrix * worldMatrix;
+
+            transformedVertex = worldMatrix * transformedVertex;
 
             transformedVertices[i] = transformedVertex;
         }
