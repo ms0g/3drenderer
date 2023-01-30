@@ -44,6 +44,9 @@ Renderer::Renderer(const std::string& objFile) {
     // Camera settings
     cameraPos = {0, 0, 0};
 
+    // Perspective Matrix
+    projectionMatrix = Mat4::PerspectiveMatrix(fov, aspect, znear, zfar);
+
     // Load Mesh data
     auto meshData = ObjParser::Load(objFile);
     mesh.SetData(meshData);
@@ -152,13 +155,23 @@ void Renderer::Update() {
         // Loop all three vertices to perform projection
         for (int i = 0; i < 3; ++i) {
             // Project the current vertex
-            Vec2 projectedPoint = Project(Vec3::FromVec4(transformedVertices[i]));
+            Vec4 projectedPoint = projectionMatrix * transformedVertices[i];
 
-            // Scale and translate the projected points to the middle of the screen
-            projectedPoint.x += (WINDOW_WIDTH / 2);
-            projectedPoint.y += (WINDOW_HEIGHT / 2);
+            // Perform perspective divide with original z-value stored in w
+            if (projectedPoint.w != 0.0) {
+                projectedPoint.x /= projectedPoint.w;
+                projectedPoint.y /= projectedPoint.w;
+                projectedPoint.z /= projectedPoint.w;
+            }
+            // Scale
+            projectedPoint.x *= (WINDOW_WIDTH / 2.0);
+            projectedPoint.y *= (WINDOW_HEIGHT / 2.0);
 
-            projectedTriangle.points[i] = projectedPoint;
+            // Translate the projected points to the middle of the screen
+            projectedPoint.x += (WINDOW_WIDTH / 2.0);
+            projectedPoint.y += (WINDOW_HEIGHT / 2.0);
+
+            projectedTriangle.points[i] = {projectedPoint.x, projectedPoint.y};
         }
         //TODO:remove after z-buffer
         float avgDepth = (transformedVertices[0].z + transformedVertices[1].z + transformedVertices[2].z) / 3.0;
@@ -220,15 +233,6 @@ void Renderer::DrawGrid() {
             graphics->DrawPixel(x, y, 0xFF444444);
         }
     }
-}
-
-Vec2 Renderer::Project(Vec3 point) {
-    Vec2 projected_point = {
-            (fov_factor * point.x) / point.z,
-            (fov_factor * point.y) / point.z
-    };
-
-    return projected_point;
 }
 
 
