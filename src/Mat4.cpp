@@ -39,6 +39,22 @@ Mat4 Mat4::TranslationMatrix(float tx, float ty, float tz) {
     return _m;
 }
 
+Mat4 Mat4::PerspectiveMatrix(float fov, float aspect, float znear, float zfar) {
+    // | (h/w)*1/tan(fov/2)             0              0                 0 |
+    // |                  0  1/tan(fov/2)              0                 0 |
+    // |                  0             0     zf/(zf-zn)  (-zf*zn)/(zf-zn) |
+    // |                  0             0              1                 0 |
+    Mat4 _m;
+    _m.m[0][0] = aspect * (1/ tan(fov/2));
+    _m.m[1][1] = 1 / tan(fov/2);
+    _m.m[2][2] = zfar / (zfar-znear);
+    _m.m[2][3] = (-zfar * znear)/(zfar-znear);
+    _m.m[3][2] = 1.0;
+
+    return _m;
+
+}
+
 Mat4 Mat4::RotationZMatrix(float angle) {
     // | c -s  0  0 |
     // | s  c  0  0 |

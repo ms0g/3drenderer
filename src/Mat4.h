@@ -13,6 +13,8 @@ struct Mat4 {
 
     static Mat4 TranslationMatrix(float tx, float ty, float tz);
 
+    static Mat4 PerspectiveMatrix(float fov, float aspect, float znear, float zfar);
+
     static Mat4 RotationZMatrix(float angle);
 
     static Mat4 RotationXMatrix(float angle);
