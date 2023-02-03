@@ -159,9 +159,12 @@ void Renderer::Update() {
                 projectedPoint.y /= projectedPoint.w;
                 projectedPoint.z /= projectedPoint.w;
             }
-            // Scale
+            // Scale into the view
             projectedPoint.x *= (WINDOW_WIDTH / 2.0);
             projectedPoint.y *= (WINDOW_HEIGHT / 2.0);
+
+            // Invert the y value to fix upside-down object rendering
+            projectedPoint.y *= -1;
 
             // Translate the projected points to the middle of the screen
             projectedPoint.x += (WINDOW_WIDTH / 2.0);
