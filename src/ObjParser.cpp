@@ -33,7 +33,8 @@ MeshData ObjParser::Load(const std::string& fileName) {
             TriangleFace face = {
                     vertex_indices[0],
                     vertex_indices[1],
-                    vertex_indices[2]
+                    vertex_indices[2],
+                    0xFFFFFFFF
             };
             data.faces.push_back(face);
         }

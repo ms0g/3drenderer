@@ -3,7 +3,7 @@
 
 
 int main() {
-    Renderer renderer{"../assets/cube.obj"};
+    Renderer renderer{};
     SDL_Event event;
     bool isRunning{true};
 
@@ -30,6 +30,7 @@ int main() {
         }
     };
 
+    renderer.LoadMesh("../assets/f22.obj");
     while (isRunning) {
         ProcessInput();
         renderer.Update();
