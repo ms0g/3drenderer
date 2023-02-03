@@ -1,6 +1,6 @@
 #pragma once
 
-enum class CULLMethod {
+enum class CullMethod {
     CULL_NONE,
     CULL_BACKFACE
 };
@@ -13,6 +13,6 @@ enum class RenderMethod {
 };
 
 struct Settings {
-    CULLMethod cullMethod;
+    CullMethod cullMethod;
     RenderMethod renderMethod;
 };

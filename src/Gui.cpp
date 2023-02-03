@@ -34,9 +34,9 @@ void Gui::Render(Settings& settings) {
 
     if (ImGui::Begin("Render Settings")) {
         if (ImGui::Button("Culling Backface")) {
-            settings.cullMethod = CULLMethod::CULL_BACKFACE;
+            settings.cullMethod = CullMethod::CULL_BACKFACE;
         } else if (ImGui::Button("Culling None")) {
-            settings.cullMethod = CULLMethod::CULL_NONE;
+            settings.cullMethod = CullMethod::CULL_NONE;
         } else if (ImGui::Button("Render Wire")) {
             settings.renderMethod = RenderMethod::RENDER_WIRE;
         } else if (ImGui::Button("Render Wire Vertex")) {
