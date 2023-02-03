@@ -6,22 +6,27 @@
 #include "Vec2.h"
 #include "Mat4.h"
 #include "Mesh.h"
+#include "Light.h"
 #include "Triangle.hpp"
 #include "Constants.hpp"
 #include "Settings.hpp"
 
 
 class Graphics;
+
 class Gui;
+
 class Renderer {
 public:
-    explicit Renderer(const std::string& objFile);
+    Renderer();
 
     ~Renderer();
 
     void Update();
 
     void Render();
+
+    void LoadMesh(const char* objFile);
 
 private:
     void DrawGrid();
@@ -30,6 +35,8 @@ private:
     std::unique_ptr<Gui> gui;
 
     Mesh mesh{};
+
+    Light light{0, 0, 1};
 
     Vec3 cameraPos;
 

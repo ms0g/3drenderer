@@ -7,7 +7,7 @@
 #include "Vec4.h"
 #include "Mat4.h"
 
-Renderer::Renderer(const std::string& objFile) {
+Renderer::Renderer() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         std::cerr << "Error initializing SDL" << std::endl;
         return;
@@ -45,11 +45,7 @@ Renderer::Renderer(const std::string& objFile) {
     cameraPos = {0, 0, 0};
 
     // Perspective Matrix
-    projectionMatrix = Mat4::PerspectiveMatrix(fov, aspect, znear, zfar);
-
-    // Load Mesh data
-    auto meshData = ObjParser::Load(objFile);
-    mesh.SetData(meshData);
+    projectionMatrix = Mat4::PerspectiveMatrix(FOV, ASPECT, ZNEAR, ZFAR);
 
     // Create color buffer
     graphics = std::make_unique<Graphics>(renderer);
@@ -58,7 +54,7 @@ Renderer::Renderer(const std::string& objFile) {
     gui = std::make_unique<Gui>(window, renderer);
 
     // Render settings
-    settings.cullMethod = CULLMethod::CULL_BACKFACE;
+    settings.cullMethod = CullMethod::CULL_BACKFACE;
     settings.renderMethod = RenderMethod::RENDER_WIRE;
 }
 
@@ -70,6 +66,11 @@ Renderer::~Renderer() {
     SDL_Quit();
 }
 
+void Renderer::LoadMesh(const char* objFile) {
+    auto meshData = ObjParser::Load(objFile);
+    mesh.SetData(meshData);
+}
+
 void Renderer::Update() {
     auto timeToWait = MILLISECS_PER_FRAME - (SDL_GetTicks() - millisecsPreviousFrame);
     if (timeToWait > 0 && timeToWait <= MILLISECS_PER_FRAME)
@@ -78,10 +79,6 @@ void Renderer::Update() {
     millisecsPreviousFrame = SDL_GetTicks();
 
     mesh.UpdateRotationX(0.01);
-
-    //mesh.UpdateScaleX(0.002);
-
-    //mesh.UpdateTranslationX(0.01);
     // Translate the mesh away from the camera
     mesh.SetTranslationZ(5);
 
@@ -124,27 +121,26 @@ void Renderer::Update() {
         }
 
         // Check backface culling
-        if (settings.cullMethod == CULLMethod::CULL_BACKFACE) {
-            Vec3 vecA = Vec3::FromVec4(transformedVertices[0]);     /*    A    */
-            Vec3 vecB = Vec3::FromVec4(transformedVertices[1]);     /*  /   \  */
-            Vec3 vecC = Vec3::FromVec4(transformedVertices[2]);     /* C-----B */
+        Vec3 vecA = Vec3::FromVec4(transformedVertices[0]);     /*    A    */
+        Vec3 vecB = Vec3::FromVec4(transformedVertices[1]);     /*  /   \  */
+        Vec3 vecC = Vec3::FromVec4(transformedVertices[2]);     /* C-----B */
 
-            // Get the vector subtraction of B-A and C-A
-            Vec3 ab = vecB - vecA;
-            Vec3 ac = vecC - vecA;
-            ab.Normalize();
-            ac.Normalize();
+        // Get the vector subtraction of B-A and C-A
+        Vec3 ab = vecB - vecA;
+        Vec3 ac = vecC - vecA;
+        ab.Normalize();
+        ac.Normalize();
 
-            // Compute the face normal
-            Vec3 normal = ab.Cross(ac);
-            normal.Normalize();
+        // Compute the face normal
+        Vec3 normal = ab.Cross(ac);
+        normal.Normalize();
 
-            // Find the vector between a point in the triangle and camera origin
-            Vec3 cameraRay = cameraPos - vecA;
+        // Find the vector between a point in the triangle and camera origin
+        Vec3 cameraRay = cameraPos - vecA;
 
-            // Calculate how aligned the normal onto the camera ray
-            float dotNormalCamera = normal.Dot(cameraRay);
-
+        // Calculate how aligned the normal onto the camera ray
+        float dotNormalCamera = normal.Dot(cameraRay);
+        if (settings.cullMethod == CullMethod::CULL_BACKFACE) {
             // Bypass the triangles that are looking away the camera
             if (dotNormalCamera < 0) {
                 continue;
@@ -173,6 +169,13 @@ void Renderer::Update() {
 
             projectedTriangle.points[i] = {projectedPoint.x, projectedPoint.y};
         }
+
+        // Calculate the shade intensity
+        float lightIntensityFactor = -light.direction.Dot(normal);
+
+        uint32_t triangleColor = Light::ApplyLightIntensity(meshFace.color, lightIntensityFactor);
+        projectedTriangle.color = triangleColor;
+
         //TODO:remove after z-buffer
         float avgDepth = (transformedVertices[0].z + transformedVertices[1].z + transformedVertices[2].z) / 3.0;
         projectedTriangle.avgDepth = avgDepth;
@@ -196,7 +199,7 @@ void Renderer::Render() {
                     triangle.points[0].x, triangle.points[0].y,
                     triangle.points[1].x, triangle.points[1].y,
                     triangle.points[2].x, triangle.points[2].y,
-                    0xFF555555
+                    triangle.color
             );
         }
 
@@ -207,7 +210,7 @@ void Renderer::Render() {
                     triangle.points[0].x, triangle.points[0].y,
                     triangle.points[1].x, triangle.points[1].y,
                     triangle.points[2].x, triangle.points[2].y,
-                    0xFFFFFFFF
+                    triangle.color
             );
         }
 
