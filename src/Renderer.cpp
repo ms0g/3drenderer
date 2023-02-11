@@ -55,7 +55,7 @@ Renderer::Renderer() {
 
     // Render settings
     settings.cullMethod = CullMethod::CULL_BACKFACE;
-    settings.renderMethod = RenderMethod::RENDER_WIRE;
+    settings.renderMethod = RenderMethod::RENDER_FILL_TRIANGLE;
 }
 
 
@@ -67,8 +67,10 @@ Renderer::~Renderer() {
 }
 
 void Renderer::LoadMesh(const char* objFile) {
-    auto meshData = ObjParser::Load(objFile);
+    //auto meshData = ObjParser::Load(objFile);
+    auto meshData = ObjParser::load_cube_mesh_data();
     mesh.SetData(meshData);
+    mesh.texture = (uint32_t*)REDBRICK_TEXTURE;
 }
 
 void Renderer::Update() {
@@ -78,7 +80,7 @@ void Renderer::Update() {
 
     millisecsPreviousFrame = SDL_GetTicks();
 
-    mesh.UpdateRotationX(0.01);
+    mesh.UpdateRotationY(0.01);
     // Translate the mesh away from the camera
     mesh.SetTranslationZ(5);
 
@@ -173,6 +175,11 @@ void Renderer::Update() {
             projectedTriangle.points[i] = {projectedPoint.x, projectedPoint.y};
         }
 
+        projectedTriangle.texcoords[0] = {meshFace.a_uv.u, meshFace.a_uv.v};
+        projectedTriangle.texcoords[1] = {meshFace.b_uv.u, meshFace.b_uv.v};
+        projectedTriangle.texcoords[2] = {meshFace.c_uv.u, meshFace.c_uv.v};
+
+
         // Calculate the shade intensity
         float lightIntensityFactor = -light.direction.Dot(normal);
 
@@ -196,6 +203,7 @@ void Renderer::Render() {
 
     // Loop all projected triangles and render them
     for (auto& triangle: trianglesToRender) {
+        // Draw filled triangle
         if (settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE ||
             settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE_WIRE) {
             graphics->FillTriangle(
@@ -206,9 +214,22 @@ void Renderer::Render() {
             );
         }
 
+        // Draw textured triangle
+        if (settings.renderMethod == RenderMethod::RENDER_TEXTURED ||
+            settings.renderMethod == RenderMethod::RENDER_TEXTURED_WIRE) {
+            graphics->DrawTexturedTriangle(
+                    triangle.points[0].x, triangle.points[0].y,triangle.texcoords[0].u,triangle.texcoords[0].v,
+                    triangle.points[1].x, triangle.points[1].y,triangle.texcoords[1].u,triangle.texcoords[1].v,
+                    triangle.points[2].x, triangle.points[2].y,triangle.texcoords[2].u,triangle.texcoords[2].v,
+                    mesh.texture
+            );
+        }
+
+        // Draw triangle wireframe
         if (settings.renderMethod == RenderMethod::RENDER_WIRE ||
             settings.renderMethod == RenderMethod::RENDER_WIRE_VERTEX ||
-            settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE_WIRE) {
+            settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE_WIRE ||
+            settings.renderMethod == RenderMethod::RENDER_TEXTURED_WIRE) {
             graphics->DrawTriangle(
                     triangle.points[0].x, triangle.points[0].y,
                     triangle.points[1].x, triangle.points[1].y,
