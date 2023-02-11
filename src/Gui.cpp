@@ -45,6 +45,10 @@ void Gui::Render(Settings& settings) {
             settings.renderMethod = RenderMethod::RENDER_FILL_TRIANGLE;
         } else if (ImGui::Button("Render Fill Triangle Wire")) {
             settings.renderMethod = RenderMethod::RENDER_FILL_TRIANGLE_WIRE;
+        } else if (ImGui::Button("Render Textured")) {
+            settings.renderMethod = RenderMethod::RENDER_TEXTURED;
+        } else if (ImGui::Button("Render Textured Wire")) {
+            settings.renderMethod = RenderMethod::RENDER_TEXTURED_WIRE;
         }
     }
     ImGui::End();

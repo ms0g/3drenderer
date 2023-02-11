@@ -74,8 +74,9 @@ public:
     [[nodiscard]] std::vector<TriangleFace>& GetFaces();
 
     [[nodiscard]] std::vector<Vec3>& GetVertices();
-
+    uint32_t* texture{};
 private:
+
     Vec3 m_rotation;
     Vec3 m_scale;
     Vec3 m_translation;
