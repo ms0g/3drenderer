@@ -39,7 +39,7 @@ Renderer::Renderer() {
     }
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+    SDL_SetWindowFullscreen(window, SDL_WINDOW_RESIZABLE);
 
     // Camera settings
     cameraPos = {0, 0, 0};
@@ -80,20 +80,20 @@ void Renderer::Update() {
 
     millisecsPreviousFrame = SDL_GetTicks();
 
-    mesh.UpdateRotationY(0.01);
+    mesh.SetRotation(Vec3{0.0,0.01,0.0});
     // Translate the mesh away from the camera
-    mesh.SetTranslationZ(5);
+    mesh.SetTranslation(Vec3{0.0,0.0,5.0});
 
     // Create scale matrix that will be used to multiply the mesh vertices;
-    Mat4 scaleMatrix = Mat4::ScaleMatrix(mesh.GetScaleX(), mesh.GetScaleY(), mesh.GetScaleZ());
+    Mat4 scaleMatrix = Mat4::ScaleMatrix(mesh.GetScale().x, mesh.GetScale().y, mesh.GetScale().z);
 
-    Mat4 translationMatrix = Mat4::TranslationMatrix(mesh.GetTranslationX(),
-                                                     mesh.GetTranslationY(),
-                                                     mesh.GetTranslationZ());
+    Mat4 translationMatrix = Mat4::TranslationMatrix(mesh.GetTranslation().x,
+                                                     mesh.GetTranslation().y,
+                                                     mesh.GetTranslation().z);
 
-    Mat4 rotationXMatrix = Mat4::RotationXMatrix(mesh.GetRotationX());
-    Mat4 rotationYMatrix = Mat4::RotationYMatrix(mesh.GetRotationY());
-    Mat4 rotationZMatrix = Mat4::RotationZMatrix(mesh.GetRotationZ());
+    Mat4 rotationXMatrix = Mat4::RotationXMatrix(mesh.GetRotation().x);
+    Mat4 rotationYMatrix = Mat4::RotationYMatrix(mesh.GetRotation().y);
+    Mat4 rotationZMatrix = Mat4::RotationZMatrix(mesh.GetRotation().z);
 
 
     for (const auto& meshFace: mesh.GetFaces()) {
