@@ -137,6 +137,7 @@ void Graphics::FillTriangle(int x0, int y0, int x1, int y1, int x2, int y2, colo
 //
 ///////////////////////////////////////////////////////////////////////////////
 void Graphics::FillFlatBottomTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color) {
+    // Inverse slope because we're calculating the x changes with respect to y
     float invSlope1 = (static_cast<float>(x1 - x0)) / (y1 - y0);
     float invSlope2 = (static_cast<float>(x2 - x0)) / (y2 - y0);
 
@@ -181,6 +182,97 @@ void Graphics::FillFlatTopTriangle(int x0, int y0, int x1, int y1, int x2, int y
         xStart -= invSlope1;
         xEnd -= invSlope2;
 
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Draw a textured triangle with the flat-top/flat-bottom method
+// We split the original triangle in two, half flat-bottom and half flat-top
+///////////////////////////////////////////////////////////////////////////////
+//
+//           u0,v0
+//            / \
+//           /   \
+//          /     \
+//         /       \
+//        /         \
+//   u1,v1-----------\
+//       \_           \
+//          \_         \
+//             \_       \
+//                \_     \
+//                   \    \
+//                     \_  \
+//                        \_\
+//                           \
+//                         u2, v2
+//
+///////////////////////////////////////////////////////////////////////////////
+void Graphics::DrawTexturedTriangle(int x0, int y0, float u0, float v0,
+                                    int x1, int y1, float u1, float v1,
+                                    int x2, int y2, float u2, float v2,
+                                    uint32_t* tex) {
+    // We need to sort vertices by y-coordinate ascending (y0 < y1 < y2)
+    if (y0 > y1) {
+        std::swap(y0, y1);
+        std::swap(x0, x1);
+        std::swap(u0, u1);
+        std::swap(v0, v1);
+    }
+
+    if (y1 > y2) {
+        std::swap(y1, y2);
+        std::swap(x1, x2);
+        std::swap(u1, u2);
+        std::swap(v1, v2);
+    }
+
+    if (y0 > y1) {
+        std::swap(y0, y1);
+        std::swap(x0, x1);
+        std::swap(u0, u1);
+        std::swap(v0, v1);
+    }
+
+     /////////////////////////////////////////////////////////
+     // Render the upper part of the triangle (flat-bottom) //
+     ////////////////////////////////////////////////////// //
+
+    float invSlope1 = (y1 - y0) != 0 ? static_cast<float>(x1 - x0) / abs(y1 - y0) : 0;
+    float invSlope2 = (y2 - y0) != 0 ? static_cast<float>(x2 - x0) / abs(y2 - y0) : 0;
+
+    if (y1 - y0 != 0) {
+        for (int y = y0; y <= y1; ++y) {
+            int xStart = x1 + (y - y1) * invSlope1;
+            int xEnd = x0 + (y - y0) * invSlope2;
+
+            if (xEnd < xStart)
+                std::swap(xStart, xEnd);
+
+            for (int x = xStart; x < xEnd; ++x) {
+                DrawPixel(x, y, 0xFFFFF00FF);
+            }
+        }
+    }
+
+    ////////////////////////////////////////////////////////
+    // Render the bottom part of the triangle (flat-top)  //
+    ////////////////////////////////////////////////////////
+    invSlope1 = (y2 - y1) != 0 ? static_cast<float>(x2 - x1) / abs(y2 - y1) : 0;
+    invSlope2 = (y2 - y0) != 0 ? static_cast<float>(x2 - x0) / abs(y2 - y0) : 0;
+
+    if (y2 - y1 != 0) {
+        for (int y = y1; y <= y2; ++y) {
+            int xStart = x1 + (y - y1) * invSlope1;
+            int xEnd = x0 + (y - y0) * invSlope2;
+
+            if (xEnd < xStart)
+                std::swap(xStart, xEnd);
+
+            for (int x = xStart; x < xEnd; ++x) {
+                DrawPixel(x, y, 0xFFFFF00FF);
+            }
+        }
     }
 }
 
