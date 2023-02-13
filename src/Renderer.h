@@ -38,9 +38,9 @@ private:
 
     Light light{0, 0, 1};
 
-    Vec3 cameraPos;
+    vec3 cameraPos;
 
-    Mat4 projectionMatrix;
+    mat4 projectionMatrix;
 
     SDL_Window* window{};
     SDL_Renderer* renderer{};

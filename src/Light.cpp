@@ -7,7 +7,7 @@ Light::Light(float x, float y, float z) {
 
 }
 
-Light::Light(Vec3 direction) : direction(direction) {}
+Light::Light(vec3 direction) : direction(direction) {}
 
 uint32_t Light::ApplyLightIntensity(uint32_t color, float factor) {
     if (factor < 0) factor = 0;

@@ -15,53 +15,53 @@ void Mesh::SetData(MeshData& meshData) {
 
 }
 
-const Vec3& Mesh::GetRotation() const {
+const vec3& Mesh::GetRotation() const {
     return m_rotation;
 }
 
-void Mesh::SetRotation(const Vec3& rotation) {
+void Mesh::SetRotation(const vec3& rotation) {
     m_rotation = rotation;
 }
 
-void Mesh::UpdateRotation(const Vec3& rotation) {
+void Mesh::UpdateRotation(const vec3& rotation) {
     m_rotation.x += rotation.x;
     m_rotation.y += rotation.y;
     m_rotation.z += rotation.z;
 }
 
-const Vec3& Mesh::GetScale() const {
+const vec3& Mesh::GetScale() const {
     return m_scale;
 }
 
-void Mesh::SetScale(const Vec3& scale) {
+void Mesh::SetScale(const vec3& scale) {
     m_scale = scale;
 }
 
-void Mesh::UpdateScale(const Vec3& scale) {
+void Mesh::UpdateScale(const vec3& scale) {
     m_scale.x += scale.x;
     m_scale.y += scale.y;
     m_scale.z += scale.z;
 }
 
-const Vec3& Mesh::GetTranslation() const {
+const vec3& Mesh::GetTranslation() const {
     return m_translation;
 }
 
-void Mesh::SetTranslation(const Vec3& translation) {
+void Mesh::SetTranslation(const vec3& translation) {
     m_translation = translation;
 }
 
-void Mesh::UpdateTranslation(const Vec3& translation) {
+void Mesh::UpdateTranslation(const vec3& translation) {
     m_translation.x += translation.x;
     m_translation.y += translation.y;
     m_translation.z += translation.z;
 }
 
-const std::vector<Vec3>& Mesh::GetVertices() const {
+const std::vector<vec3>& Mesh::GetVertices() const {
     return m_vertices;
 }
 
-void Mesh::SetVertices(const std::vector<Vec3>& vertices) {
+void Mesh::SetVertices(const std::vector<vec3>& vertices) {
     m_vertices = vertices;
 }
 

@@ -5,6 +5,6 @@
 #include "Triangle.hpp"
 
 struct MeshData {
-    std::vector<Vec3> vertices;
+    std::vector<vec3> vertices;
     std::vector<TriangleFace> faces;
 };

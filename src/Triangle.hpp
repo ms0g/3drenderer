@@ -10,7 +10,7 @@ struct TriangleFace {
 };
 
 struct Triangle {
-    Vec2 points[3];
+    vec2 points[3];
     Texture texcoords[3];
     float avgDepth;
     uint32_t color;

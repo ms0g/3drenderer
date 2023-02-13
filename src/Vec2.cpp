@@ -2,41 +2,41 @@
 #include <cmath>
 
 
-Vec2::Vec2() : x(0.0), y(0.0) {}
+vec2::vec2() : x(0.0), y(0.0) {}
 
-Vec2::Vec2(float x, float y) : x(x), y(y) {}
+vec2::vec2(float x, float y) : x(x), y(y) {}
 
-void Vec2::Add(const Vec2& v) {
+void vec2::Add(const vec2& v) {
     x += v.x;
     y += v.y;
 }
 
-void Vec2::Sub(const Vec2& v) {
+void vec2::Sub(const vec2& v) {
     x -= v.x;
     y -= v.y;
 }
 
-void Vec2::Scale(const float n) {
+void vec2::Scale(const float n) {
     x *= n;
     y *= n;
 }
 
-Vec2 Vec2::Rotate(const float angle) const {
-    Vec2 result;
+vec2 vec2::Rotate(const float angle) const {
+    vec2 result;
     result.x = x * cos(angle) - y * sin(angle);
     result.y = x * sin(angle) + y * cos(angle);
     return result;
 }
 
-float Vec2::Magnitude() const {
+float vec2::Magnitude() const {
     return sqrtf(x * x + y * y);
 }
 
-float Vec2::MagnitudeSquared() const {
+float vec2::MagnitudeSquared() const {
     return (x * x + y * y);
 }
 
-Vec2& Vec2::Normalize() {
+vec2& vec2::Normalize() {
     float length = Magnitude();
     if (length != 0.0) {
         x /= length;
@@ -45,8 +45,8 @@ Vec2& Vec2::Normalize() {
     return *this;
 }
 
-Vec2 Vec2::UnitVector() const {
-    Vec2 result = Vec2(0, 0);
+vec2 vec2::UnitVector() const {
+    vec2 result = vec2(0, 0);
     float length = Magnitude();
     if (length != 0.0) {
         result.x = x / length;
@@ -55,78 +55,78 @@ Vec2 Vec2::UnitVector() const {
     return result;
 }
 
-Vec2 Vec2::Normal() const {
-    return Vec2(y, -x).Normalize();
+vec2 vec2::Normal() const {
+    return vec2(y, -x).Normalize();
 }
 
-float Vec2::Dot(const Vec2& v) const {
+float vec2::Dot(const vec2& v) const {
     return (x * v.x) + (y * v.y);
 }
 
-Vec2& Vec2::operator=(const Vec2& v) = default;
+vec2& vec2::operator=(const vec2& v) = default;
 
-bool Vec2::operator==(const Vec2& v) const {
+bool vec2::operator==(const vec2& v) const {
     return x == v.x && y == v.y;
 }
 
-bool Vec2::operator!=(const Vec2& v) const {
+bool vec2::operator!=(const vec2& v) const {
     return !(*this == v);
 }
 
-Vec2 Vec2::operator+(const Vec2& v) const {
-    Vec2 result;
+vec2 vec2::operator+(const vec2& v) const {
+    vec2 result;
     result.x = x + v.x;
     result.y = y + v.y;
     return result;
 }
 
-Vec2 Vec2::operator-(const Vec2& v) const {
-    Vec2 result;
+vec2 vec2::operator-(const vec2& v) const {
+    vec2 result;
     result.x = x - v.x;
     result.y = y - v.y;
     return result;
 }
 
-Vec2 Vec2::operator*(const float n) const {
-    Vec2 result;
+vec2 vec2::operator*(const float n) const {
+    vec2 result;
     result.x = x * n;
     result.y = y * n;
     return result;
 }
 
-Vec2 Vec2::operator/(const float n) const {
-    Vec2 result;
+vec2 vec2::operator/(const float n) const {
+    vec2 result;
     result.x = x / n;
     result.y = y / n;
     return result;
 }
 
-Vec2& Vec2::operator+=(const Vec2& v) {
+vec2& vec2::operator+=(const vec2& v) {
     x += v.x;
     y += v.y;
     return *this;
 }
 
-Vec2& Vec2::operator-=(const Vec2& v) {
+vec2& vec2::operator-=(const vec2& v) {
     x -= v.x;
     y -= v.y;
     return *this;
 }
 
-Vec2& Vec2::operator*=(const float n) {
+vec2& vec2::operator*=(const float n) {
     x *= n;
     y *= n;
     return *this;
 }
 
-Vec2& Vec2::operator/=(const float n) {
+vec2& vec2::operator/=(const float n) {
     x /= n;
     y /= n;
     return *this;
 }
 
-Vec2 Vec2::operator-() const {
-    Vec2 result;
+vec2 vec2::operator-() const {
+    vec2 result;
     result.x = x * -1;
     result.y = y * -1;
     return result;

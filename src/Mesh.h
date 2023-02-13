@@ -12,27 +12,27 @@ public:
 
     void SetData(MeshData& meshData);
 
-    [[nodiscard]] const Vec3& GetRotation() const;
+    [[nodiscard]] const vec3& GetRotation() const;
 
-    void SetRotation(const Vec3& rotation);
+    void SetRotation(const vec3& rotation);
 
-    void UpdateRotation(const Vec3& rotation);
+    void UpdateRotation(const vec3& rotation);
 
-    [[nodiscard]] const Vec3& GetScale() const;
+    [[nodiscard]] const vec3& GetScale() const;
 
-    void SetScale(const Vec3& scale);
+    void SetScale(const vec3& scale);
 
-    void UpdateScale(const Vec3& scale);
+    void UpdateScale(const vec3& scale);
 
-    [[nodiscard]] const Vec3& GetTranslation() const;
+    [[nodiscard]] const vec3& GetTranslation() const;
 
-    void SetTranslation(const Vec3& translation);
+    void SetTranslation(const vec3& translation);
 
-    void UpdateTranslation(const Vec3& translation);
+    void UpdateTranslation(const vec3& translation);
 
-    [[nodiscard]] const std::vector<Vec3>& GetVertices() const;
+    [[nodiscard]] const std::vector<vec3>& GetVertices() const;
 
-    void SetVertices(const std::vector<Vec3>& vertices);
+    void SetVertices(const std::vector<vec3>& vertices);
 
     [[nodiscard]] const std::vector<TriangleFace>& GetFaces() const;
 
@@ -41,10 +41,10 @@ public:
     uint32_t* texture{};
 
 private:
-    Vec3 m_rotation;
-    Vec3 m_scale;
-    Vec3 m_translation;
-    std::vector<Vec3> m_vertices;
+    vec3 m_rotation;
+    vec3 m_scale;
+    vec3 m_translation;
+    std::vector<vec3> m_vertices;
     std::vector<TriangleFace> m_faces;
 };
 

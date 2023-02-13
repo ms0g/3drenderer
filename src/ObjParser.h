@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-class Vec3;
+class vec3;
 class MeshData;
 class TriangleFace;
 

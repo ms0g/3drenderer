@@ -45,7 +45,7 @@ Renderer::Renderer() {
     cameraPos = {0, 0, 0};
 
     // Perspective Matrix
-    projectionMatrix = Mat4::PerspectiveMatrix(FOV, ASPECT, ZNEAR, ZFAR);
+    projectionMatrix = mat4::PerspectiveMatrix(FOV, ASPECT, ZNEAR, ZFAR);
 
     // Create color buffer
     graphics = std::make_unique<Graphics>(renderer);
@@ -80,35 +80,35 @@ void Renderer::Update() {
 
     millisecsPreviousFrame = SDL_GetTicks();
 
-    mesh.UpdateRotation(Vec3{0.01, 0.0, 0.0});
+    mesh.UpdateRotation(vec3{0.01, 0.0, 0.0});
     // Translate the mesh away from the camera
-    mesh.SetTranslation(Vec3{0.0, 0.0, 5.0});
+    mesh.SetTranslation(vec3{0.0, 0.0, 5.0});
 
     // Create scale matrix that will be used to multiply the mesh vertices;
-    Mat4 scaleMatrix = Mat4::ScaleMatrix(mesh.GetScale().x, mesh.GetScale().y, mesh.GetScale().z);
+    mat4 scaleMatrix = mat4::ScaleMatrix(mesh.GetScale().x, mesh.GetScale().y, mesh.GetScale().z);
 
-    Mat4 translationMatrix = Mat4::TranslationMatrix(mesh.GetTranslation().x,
+    mat4 translationMatrix = mat4::TranslationMatrix(mesh.GetTranslation().x,
                                                      mesh.GetTranslation().y,
                                                      mesh.GetTranslation().z);
 
-    Mat4 rotationXMatrix = Mat4::RotationXMatrix(mesh.GetRotation().x);
-    Mat4 rotationYMatrix = Mat4::RotationYMatrix(mesh.GetRotation().y);
-    Mat4 rotationZMatrix = Mat4::RotationZMatrix(mesh.GetRotation().z);
+    mat4 rotationXMatrix = mat4::RotationXMatrix(mesh.GetRotation().x);
+    mat4 rotationYMatrix = mat4::RotationYMatrix(mesh.GetRotation().y);
+    mat4 rotationZMatrix = mat4::RotationZMatrix(mesh.GetRotation().z);
 
 
     for (const auto& meshFace: mesh.GetFaces()) {
-        Vec3 faceVertices[3];
+        vec3 faceVertices[3];
         faceVertices[0] = mesh.GetVertices()[meshFace.a - 1];
         faceVertices[1] = mesh.GetVertices()[meshFace.b - 1];
         faceVertices[2] = mesh.GetVertices()[meshFace.c - 1];
 
-        Vec4 transformedVertices[3];
+        vec4 transformedVertices[3];
         // Loop all three vertices of this current face and apply transformations
         for (int i = 0; i < 3; ++i) {
-            Vec4 transformedVertex = Vec4::FromVec3(faceVertices[i]);
+            vec4 transformedVertex = vec4::FromVec3(faceVertices[i]);
 
             // Create a World Matrix combining scale, rotation, and translation matrices
-            Mat4 worldMatrix = Mat4::IdentityMatrix();
+            mat4 worldMatrix = mat4::IdentityMatrix();
 
             // Order matters: First scale, then rotate, then translate. [T]*[R]*[S]*v
             worldMatrix = scaleMatrix * worldMatrix;
@@ -123,22 +123,22 @@ void Renderer::Update() {
         }
 
         // Check backface culling
-        Vec3 vecA = Vec3::FromVec4(transformedVertices[0]);     /*    A    */
-        Vec3 vecB = Vec3::FromVec4(transformedVertices[1]);     /*  /   \  */
-        Vec3 vecC = Vec3::FromVec4(transformedVertices[2]);     /* C-----B */
+        vec3 vecA = vec3::FromVec4(transformedVertices[0]);     /*    A    */
+        vec3 vecB = vec3::FromVec4(transformedVertices[1]);     /*  /   \  */
+        vec3 vecC = vec3::FromVec4(transformedVertices[2]);     /* C-----B */
 
         // Get the vector subtraction of B-A and C-A
-        Vec3 ab = vecB - vecA;
-        Vec3 ac = vecC - vecA;
+        vec3 ab = vecB - vecA;
+        vec3 ac = vecC - vecA;
         ab.Normalize();
         ac.Normalize();
 
         // Compute the face normal
-        Vec3 normal = ab.Cross(ac);
+        vec3 normal = ab.Cross(ac);
         normal.Normalize();
 
         // Find the vector between a point in the triangle and camera origin
-        Vec3 cameraRay = cameraPos - vecA;
+        vec3 cameraRay = cameraPos - vecA;
 
         // Calculate how aligned the normal onto the camera ray
         float dotNormalCamera = normal.Dot(cameraRay);
@@ -153,7 +153,7 @@ void Renderer::Update() {
         // Loop all three vertices to perform projection
         for (int i = 0; i < 3; ++i) {
             // Project the current vertex
-            Vec4 projectedPoint = projectionMatrix * transformedVertices[i];
+            vec4 projectedPoint = projectionMatrix * transformedVertices[i];
 
             // Perform perspective divide with original z-value stored in w
             if (projectedPoint.w != 0.0) {

@@ -2,37 +2,37 @@
 #include <cmath>
 #include "Vec4.h"
 
-Vec3::Vec3() : x(0.0), y(0.0), z(0.0) {}
+vec3::vec3() : x(0.0), y(0.0), z(0.0) {}
 
-Vec3::Vec3(float x, float y, float z) : x(x), y(y), z(z) {}
+vec3::vec3(float x, float y, float z) : x(x), y(y), z(z) {}
 
-void Vec3::Add(const Vec3& v) {
+void vec3::Add(const vec3& v) {
     x += v.x;
     y += v.y;
     z += v.z;
 }
 
-void Vec3::Sub(const Vec3& v) {
+void vec3::Sub(const vec3& v) {
     x -= v.x;
     y -= v.y;
     z -= v.z;
 }
 
-void Vec3::Scale(const float n) {
+void vec3::Scale(const float n) {
     x *= n;
     y *= n;
     z *= n;
 }
 
-Vec3 Vec3::Rotate(const float angleX, const float angleY, const float angleZ) const {
-    Vec3 result = RotateX(angleX);
+vec3 vec3::Rotate(const float angleX, const float angleY, const float angleZ) const {
+    vec3 result = RotateX(angleX);
     result = result.RotateY(angleY);
     result = result.RotateZ(angleZ);
     return result;
 }
 
-Vec3 Vec3::RotateX(float angle) const {
-    Vec3 result = {
+vec3 vec3::RotateX(float angle) const {
+    vec3 result = {
             x,
             y * cos(angle) - z * sin(angle),
             y * sin(angle) + z * cos(angle)
@@ -41,8 +41,8 @@ Vec3 Vec3::RotateX(float angle) const {
     return result;
 }
 
-Vec3 Vec3::RotateY(float angle) const {
-    Vec3 result = {
+vec3 vec3::RotateY(float angle) const {
+    vec3 result = {
             x * cos(angle) - z * sin(angle),
             y,
             x * sin(angle) + z * cos(angle)
@@ -50,8 +50,8 @@ Vec3 Vec3::RotateY(float angle) const {
     return result;
 }
 
-Vec3 Vec3::RotateZ(float angle) const {
-    Vec3 result = {
+vec3 vec3::RotateZ(float angle) const {
+    vec3 result = {
             x * cos(angle) - y * sin(angle),
             x * sin(angle) + y * cos(angle),
             z,
@@ -59,15 +59,15 @@ Vec3 Vec3::RotateZ(float angle) const {
     return result;
 }
 
-float Vec3::Magnitude() const {
+float vec3::Magnitude() const {
     return sqrtf(x * x + y * y + z * z);
 }
 
-float Vec3::MagnitudeSquared() const {
+float vec3::MagnitudeSquared() const {
     return (x * x + y * y + z * z);
 }
 
-Vec3& Vec3::Normalize() {
+vec3& vec3::Normalize() {
     float length = Magnitude();
     if (length != 0.0) {
         x /= length;
@@ -77,8 +77,8 @@ Vec3& Vec3::Normalize() {
     return *this;
 }
 
-Vec3 Vec3::UnitVector() const {
-    Vec3 result = Vec3(0, 0, 0);
+vec3 vec3::UnitVector() const {
+    vec3 result = vec3(0, 0, 0);
     float length = Magnitude();
     if (length != 0.0) {
         result.x = x / length;
@@ -88,94 +88,94 @@ Vec3 Vec3::UnitVector() const {
     return result;
 }
 
-Vec3 Vec3::FromVec4(Vec4 v) {
+vec3 vec3::FromVec4(vec4 v) {
     return {v.x, v.y, v.z};
 }
 
-float Vec3::Dot(const Vec3& v) const {
+float vec3::Dot(const vec3& v) const {
     return (x * v.x) + (y * v.y) + (z * v.z);
 }
 
-Vec3 Vec3::Cross(const Vec3& v) const {
-    Vec3 result;
+vec3 vec3::Cross(const vec3& v) const {
+    vec3 result;
     result.x = y * v.z - z * v.y;
     result.y = z * v.x - x * v.z;
     result.z = x * v.y - y * v.x;
     return result;
 }
 
-Vec3& Vec3::operator=(const Vec3& v) = default;
+vec3& vec3::operator=(const vec3& v) = default;
 
-bool Vec3::operator==(const Vec3& v) const {
+bool vec3::operator==(const vec3& v) const {
     return x == v.x && y == v.y && z == v.z;
 }
 
-bool Vec3::operator!=(const Vec3& v) const {
+bool vec3::operator!=(const vec3& v) const {
     return !(*this == v);
 }
 
-Vec3 Vec3::operator+(const Vec3& v) const {
-    Vec3 result;
+vec3 vec3::operator+(const vec3& v) const {
+    vec3 result;
     result.x = x + v.x;
     result.y = y + v.y;
     result.z = z + v.z;
     return result;
 }
 
-Vec3 Vec3::operator-(const Vec3& v) const {
-    Vec3 result;
+vec3 vec3::operator-(const vec3& v) const {
+    vec3 result;
     result.x = x - v.x;
     result.y = y - v.y;
     result.z = z - v.z;
     return result;
 }
 
-Vec3 Vec3::operator*(const float n) const {
-    Vec3 result;
+vec3 vec3::operator*(const float n) const {
+    vec3 result;
     result.x = x * n;
     result.y = y * n;
     result.z = z * n;
     return result;
 }
 
-Vec3 Vec3::operator/(const float n) const {
-    Vec3 result;
+vec3 vec3::operator/(const float n) const {
+    vec3 result;
     result.x = x / n;
     result.y = y / n;
     result.z = z / n;
     return result;
 }
 
-Vec3& Vec3::operator+=(const Vec3& v) {
+vec3& vec3::operator+=(const vec3& v) {
     x += v.x;
     y += v.y;
     z += v.z;
     return *this;
 }
 
-Vec3& Vec3::operator-=(const Vec3& v) {
+vec3& vec3::operator-=(const vec3& v) {
     x -= v.x;
     y -= v.y;
     z -= v.z;
     return *this;
 }
 
-Vec3& Vec3::operator*=(const float n) {
+vec3& vec3::operator*=(const float n) {
     x *= n;
     y *= n;
     z *= n;
     return *this;
 }
 
-Vec3& Vec3::operator/=(const float n) {
+vec3& vec3::operator/=(const float n) {
     x /= n;
     y /= n;
     z /= n;
     return *this;
 }
 
-Vec3 Vec3::operator-() const {
-    Vec3 result;
+vec3 vec3::operator-() const {
+    vec3 result;
     result.x = x * -1;
     result.y = y * -1;
     result.z = z * -1;

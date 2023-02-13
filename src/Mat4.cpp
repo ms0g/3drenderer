@@ -2,7 +2,7 @@
 #include "Mat4.h"
 #include "Vec4.h"
 
-Mat4 Mat4::IdentityMatrix() {
+mat4 mat4::IdentityMatrix() {
     return {{
         {1, 0, 0, 0},
         {0, 1, 0, 0},
@@ -11,12 +11,12 @@ Mat4 Mat4::IdentityMatrix() {
     }};
 }
 
-Mat4 Mat4::ScaleMatrix(float sx, float sy, float sz) {
+mat4 mat4::ScaleMatrix(float sx, float sy, float sz) {
     // | sx  0  0  0 |
     // |  0 sy  0  0 |
     // |  0  0 sz  0 |
     // |  0  0  0  1 |
-    Mat4 _m = IdentityMatrix();
+    mat4 _m = IdentityMatrix();
 
     _m.m[0][0] = sx;
     _m.m[1][1] = sy;
@@ -25,12 +25,12 @@ Mat4 Mat4::ScaleMatrix(float sx, float sy, float sz) {
     return _m;
 }
 
-Mat4 Mat4::TranslationMatrix(float tx, float ty, float tz) {
+mat4 mat4::TranslationMatrix(float tx, float ty, float tz) {
     // |  1  0  0  tx |
     // |  0  1  0  ty |
     // |  0  0  1  tz |
     // |  0  0  0  1  |
-    Mat4 _m = IdentityMatrix();
+    mat4 _m = IdentityMatrix();
 
     _m.m[0][3] = tx;
     _m.m[1][3] = ty;
@@ -39,12 +39,12 @@ Mat4 Mat4::TranslationMatrix(float tx, float ty, float tz) {
     return _m;
 }
 
-Mat4 Mat4::PerspectiveMatrix(float fov, float aspect, float znear, float zfar) {
+mat4 mat4::PerspectiveMatrix(float fov, float aspect, float znear, float zfar) {
     // | (h/w)*1/tan(fov/2)             0              0                 0 |
     // |                  0  1/tan(fov/2)              0                 0 |
     // |                  0             0     zf/(zf-zn)  (-zf*zn)/(zf-zn) |
     // |                  0             0              1                 0 |
-    Mat4 _m;
+    mat4 _m;
     _m.m[0][0] = aspect * (1/ tan(fov/2));
     _m.m[1][1] = 1 / tan(fov/2);
     _m.m[2][2] = zfar / (zfar-znear);
@@ -55,12 +55,12 @@ Mat4 Mat4::PerspectiveMatrix(float fov, float aspect, float znear, float zfar) {
 
 }
 
-Mat4 Mat4::RotationZMatrix(float angle) {
+mat4 mat4::RotationZMatrix(float angle) {
     // | c -s  0  0 |
     // | s  c  0  0 |
     // | 0  0  1  0 |
     // | 0  0  0  1 |
-    Mat4 _m = IdentityMatrix();
+    mat4 _m = IdentityMatrix();
 
     _m.m[0][0] = cos(angle);
     _m.m[0][1] = -sin(angle);
@@ -70,12 +70,12 @@ Mat4 Mat4::RotationZMatrix(float angle) {
     return _m;
 }
 
-Mat4 Mat4::RotationXMatrix(float angle) {
+mat4 mat4::RotationXMatrix(float angle) {
     // | 1  0  0  0 |
     // | 0  c -s  0 |
     // | 0  s  c  0 |
     // | 0  0  0  1 |
-    Mat4 _m = IdentityMatrix();
+    mat4 _m = IdentityMatrix();
 
     _m.m[1][1] = cos(angle);
     _m.m[1][2] = -sin(angle);
@@ -85,12 +85,12 @@ Mat4 Mat4::RotationXMatrix(float angle) {
     return _m;
 }
 
-Mat4 Mat4::RotationYMatrix(float angle) {
+mat4 mat4::RotationYMatrix(float angle) {
     // |  c  0  s  0 |
     // |  0  1  0  0 |
     // | -s  0  c  0 |
     // |  0  0  0  1 |
-    Mat4 _m = IdentityMatrix();
+    mat4 _m = IdentityMatrix();
 
     _m.m[0][0] = cos(angle);
     _m.m[0][2] = sin(angle);
@@ -100,8 +100,8 @@ Mat4 Mat4::RotationYMatrix(float angle) {
     return _m;
 }
 
-Vec4 Mat4::operator*(Vec4 v) const {
-    Vec4 _v{};
+vec4 mat4::operator*(vec4 v) const {
+    vec4 _v{};
 
     _v.x = m[0][0] * v.x + m[0][1] * v.y + m[0][2] * v.z + m[0][3] * v.w;
     _v.y = m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z + m[1][3] * v.w;
@@ -111,8 +111,8 @@ Vec4 Mat4::operator*(Vec4 v) const {
     return _v;
 }
 
-Mat4 Mat4::operator*(Mat4 m1) const {
-    Mat4 _m;
+mat4 mat4::operator*(mat4 m1) const {
+    mat4 _m;
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             _m.m[i][j] = m[i][0] * m1.m[0][j] + m[i][1] * m1.m[1][j] + m[i][2] * m1.m[2][j] + m[i][3] * m1.m[3][j];
