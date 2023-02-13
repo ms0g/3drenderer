@@ -19,38 +19,56 @@ const Vec3& Mesh::GetRotation() const {
     return m_rotation;
 }
 
-void Mesh::SetRotation(const Vec3& mRotation) {
-    m_rotation = mRotation;
+void Mesh::SetRotation(const Vec3& rotation) {
+    m_rotation = rotation;
+}
+
+void Mesh::UpdateRotation(const Vec3& rotation) {
+    m_rotation.x += rotation.x;
+    m_rotation.y += rotation.y;
+    m_rotation.z += rotation.z;
 }
 
 const Vec3& Mesh::GetScale() const {
     return m_scale;
 }
 
-void Mesh::SetScale(const Vec3& mScale) {
-    m_scale = mScale;
+void Mesh::SetScale(const Vec3& scale) {
+    m_scale = scale;
+}
+
+void Mesh::UpdateScale(const Vec3& scale) {
+    m_scale.x += scale.x;
+    m_scale.y += scale.y;
+    m_scale.z += scale.z;
 }
 
 const Vec3& Mesh::GetTranslation() const {
     return m_translation;
 }
 
-void Mesh::SetTranslation(const Vec3& mTranslation) {
-    m_translation = mTranslation;
+void Mesh::SetTranslation(const Vec3& translation) {
+    m_translation = translation;
+}
+
+void Mesh::UpdateTranslation(const Vec3& translation) {
+    m_translation.x += translation.x;
+    m_translation.y += translation.y;
+    m_translation.z += translation.z;
 }
 
 const std::vector<Vec3>& Mesh::GetVertices() const {
     return m_vertices;
 }
 
-void Mesh::SetVertices(const std::vector<Vec3>& mVertices) {
-    m_vertices = mVertices;
+void Mesh::SetVertices(const std::vector<Vec3>& vertices) {
+    m_vertices = vertices;
 }
 
 const std::vector<TriangleFace>& Mesh::GetFaces() const {
     return m_faces;
 }
 
-void Mesh::SetFaces(const std::vector<TriangleFace>& mFaces) {
-    m_faces = mFaces;
+void Mesh::SetFaces(const std::vector<TriangleFace>& faces) {
+    m_faces = faces;
 }

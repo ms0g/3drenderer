@@ -14,23 +14,29 @@ public:
 
     [[nodiscard]] const Vec3& GetRotation() const;
 
-    void SetRotation(const Vec3& mRotation);
+    void SetRotation(const Vec3& rotation);
+
+    void UpdateRotation(const Vec3& rotation);
 
     [[nodiscard]] const Vec3& GetScale() const;
 
-    void SetScale(const Vec3& mScale);
+    void SetScale(const Vec3& scale);
+
+    void UpdateScale(const Vec3& scale);
 
     [[nodiscard]] const Vec3& GetTranslation() const;
 
-    void SetTranslation(const Vec3& mTranslation);
+    void SetTranslation(const Vec3& translation);
+
+    void UpdateTranslation(const Vec3& translation);
 
     [[nodiscard]] const std::vector<Vec3>& GetVertices() const;
 
-    void SetVertices(const std::vector<Vec3>& mVertices);
+    void SetVertices(const std::vector<Vec3>& vertices);
 
     [[nodiscard]] const std::vector<TriangleFace>& GetFaces() const;
 
-    void SetFaces(const std::vector<TriangleFace>& mFaces);
+    void SetFaces(const std::vector<TriangleFace>& faces);
 
     uint32_t* texture{};
 
