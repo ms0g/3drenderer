@@ -2,7 +2,10 @@
 
 Texture::Texture(float u, float v) :
         u(u), v(v),
-        width(64), height(64) {}
+        width(64), height(64) {
+
+    data = (uint32_t*) &REDBRICK_TEXTURE[0];
+}
 
 Texture& Texture::operator=(const Texture& other) {
     if (this == &other) return *this;

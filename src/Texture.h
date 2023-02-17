@@ -11,6 +11,7 @@ struct Texture {
     Texture(float u, float v);
 
     Texture& operator=(const Texture& other);
+    uint32_t* data{};
 };
 
 extern const uint8_t REDBRICK_TEXTURE[];
