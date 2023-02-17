@@ -13,9 +13,7 @@
 
 
 class Graphics;
-
 class Gui;
-
 class Renderer {
 public:
     Renderer();

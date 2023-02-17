@@ -70,7 +70,6 @@ void Renderer::LoadMesh(const char* objFile) {
     //auto meshData = ObjParser::Load(objFile);
     auto meshData = ObjParser::load_cube_mesh_data();
     mesh.SetData(meshData);
-    mesh.texture = (uint32_t*) REDBRICK_TEXTURE;
 }
 
 void Renderer::Update() {
@@ -221,7 +220,7 @@ void Renderer::Render() {
                     triangle.points[0].x, triangle.points[0].y, triangle.texcoords[0].u, triangle.texcoords[0].v,
                     triangle.points[1].x, triangle.points[1].y, triangle.texcoords[1].u, triangle.texcoords[1].v,
                     triangle.points[2].x, triangle.points[2].y, triangle.texcoords[2].u, triangle.texcoords[2].v,
-                    mesh.texture
+                    mesh.GetTexture()
             );
         }
 
