@@ -13,6 +13,12 @@ void Mesh::SetData(MeshData& meshData) {
     // Fill faces
     m_faces = meshData.faces;
 
+    //TODO: remove after loading from png
+    texture = &m_faces[0].a_uv;
+}
+
+Texture* Mesh::GetTexture() const {
+    return texture;
 }
 
 const vec3& Mesh::GetRotation() const {
