@@ -14,12 +14,12 @@ void Mesh::SetData(MeshData& meshData) {
     m_faces = meshData.faces;
 }
 
-PngTexture* Mesh::GetTexture() const {
-    return texture;
+const PngTexture& Mesh::GetTexture() const {
+    return *m_texture;
 }
 
-void Mesh::SetTexture(PngTexture* tex) {
-    texture = tex;
+void Mesh::SetTexture(std::unique_ptr<PngTexture>& tex) {
+    m_texture = std::move(tex);
 }
 
 const vec3& Mesh::GetRotation() const {

@@ -12,9 +12,9 @@ public:
 
     void SetData(MeshData& meshData);
 
-    [[nodiscard]] PngTexture* GetTexture() const;
+    [[nodiscard]] const PngTexture& GetTexture() const;
 
-    void SetTexture(PngTexture* tex);
+    void SetTexture(std::unique_ptr<PngTexture>& tex);
 
     [[nodiscard]] const vec3& GetRotation() const;
 
@@ -48,7 +48,7 @@ private:
     vec3 m_translation;
     std::vector<vec3> m_vertices;
     std::vector<TriangleFace> m_faces;
-    PngTexture* texture{};
+    std::unique_ptr<PngTexture> m_texture;
 };
 
 
