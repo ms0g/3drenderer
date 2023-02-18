@@ -69,7 +69,11 @@ Renderer::~Renderer() {
 void Renderer::LoadMesh(const char* objFile) {
     auto meshData = ObjParser::Load(objFile);
     mesh.SetData(meshData);
-    mesh.SetTexture(&texture);
+}
+
+void Renderer::LoadTexture(const char* textureFile) {
+    auto texture = std::make_unique<PngTexture>(textureFile);
+    mesh.SetTexture(texture);
 }
 
 void Renderer::Update() {
@@ -79,7 +83,7 @@ void Renderer::Update() {
 
     millisecsPreviousFrame = SDL_GetTicks();
 
-    mesh.UpdateRotation(vec3{0.0, 0.01, 0.0});
+    mesh.UpdateRotation(vec3{0.01, 0.01, 0.01});
     // Translate the mesh away from the camera
     mesh.SetTranslation(vec3{0.0, 0.0, 5.0});
 
@@ -97,9 +101,9 @@ void Renderer::Update() {
 
     for (const auto& meshFace: mesh.GetFaces()) {
         vec3 faceVertices[3];
-        faceVertices[0] = mesh.GetVertices()[meshFace.a - 1];
-        faceVertices[1] = mesh.GetVertices()[meshFace.b - 1];
-        faceVertices[2] = mesh.GetVertices()[meshFace.c - 1];
+        faceVertices[0] = mesh.GetVertices()[meshFace.a];
+        faceVertices[1] = mesh.GetVertices()[meshFace.b];
+        faceVertices[2] = mesh.GetVertices()[meshFace.c];
 
         vec4 transformedVertices[3];
         // Loop all three vertices of this current face and apply transformations

@@ -30,7 +30,9 @@ int main() {
         }
     };
 
-    renderer.LoadMesh("../assets/suzanne.obj");
+    renderer.LoadMesh("../assets/crab.obj");
+    renderer.LoadTexture("../assets/crab.png");
+
     while (isRunning) {
         ProcessInput();
         renderer.Update();

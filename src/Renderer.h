@@ -26,6 +26,8 @@ public:
 
     void LoadMesh(const char* objFile);
 
+    void LoadTexture(const char* textureFile);
+
 private:
     void DrawGrid();
 
@@ -33,7 +35,6 @@ private:
     std::unique_ptr<Gui> gui;
 
     Mesh mesh{};
-    PngTexture texture{"../assets/cube.png"};
 
     Light light{0, 0, 1};
 
