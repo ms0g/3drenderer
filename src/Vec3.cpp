@@ -88,7 +88,7 @@ vec3 vec3::UnitVector() const {
     return result;
 }
 
-vec3 vec3::FromVec4(vec4 v) {
+vec3 vec3::FromVec4(const vec4& v) {
     return {v.x, v.y, v.z};
 }
 

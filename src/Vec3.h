@@ -27,7 +27,7 @@ struct vec3 {
     vec3& Normalize();                                  // v1.Normalize()
     [[nodiscard]] vec3 UnitVector() const;              // v1.UnitVector()
 
-    static vec3 FromVec4(vec4 v) ;
+    static vec3 FromVec4(const vec4& v);                // vec3::FromVec4(v4)
 
     [[nodiscard]] float Dot(const vec3& v) const;       // v1.Dot(v2)
     [[nodiscard]] vec3 Cross(const vec3& v) const;      // v1.Cross(v2)
