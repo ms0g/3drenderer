@@ -32,7 +32,7 @@ void Graphics::DrawPixel(int x, int y, color_t color) {
 
 void Graphics::DrawTexel(int x, int y, vec4 a, vec4 b, vec4 c,
                          Texture& aTex, Texture& bTex, Texture& cTex,
-                         PngTexture* tex) {
+                         const PngTexture& tex) {
     vec2 p = {static_cast<float>(x), static_cast<float>(y)};
 
     vec2 av2 = vec2::FromVec4(a);
@@ -60,10 +60,10 @@ void Graphics::DrawTexel(int x, int y, vec4 a, vec4 b, vec4 c,
     interpolated_V /= interpolated_R_W;
 
     // Map the UV coordinate to the full texture width and height
-    int texX = abs(static_cast<int>(interpolated_U * tex->width));
-    int texY = abs(static_cast<int>(interpolated_V * tex->height));
+    int texX = abs(static_cast<int>(interpolated_U * tex.width)) % tex.width;
+    int texY = abs(static_cast<int>(interpolated_V * tex.height)) % tex.height;
 
-    DrawPixel(x, y, tex->data[texY * tex->width + texX]);
+    DrawPixel(x, y, tex.data[texY * tex.width + texX]);
 }
 
 void Graphics::Clear(color_t color) {
@@ -251,7 +251,7 @@ void Graphics::FillFlatTopTriangle(int x0, int y0, int x1, int y1, int x2, int y
 void Graphics::DrawTexturedTriangle(int x0, int y0, float z0, float w0, Texture& aTex,
                                     int x1, int y1, float z1, float w1, Texture& bTex,
                                     int x2, int y2, float z2, float w2, Texture& cTex,
-                                    PngTexture* tex) {
+                                    const PngTexture& tex) {
     // We need to sort vertices by y-coordinate ascending (y0 < y1 < y2)
     if (y0 > y1) {
         std::swap(y0, y1);
@@ -279,6 +279,11 @@ void Graphics::DrawTexturedTriangle(int x0, int y0, float z0, float w0, Texture&
         std::swap(aTex.u, bTex.u);
         std::swap(aTex.v, bTex.v);
     }
+
+    // Flip the V values to account the inverted UV-coordinates (V grows downwards)
+    aTex.v = 1 - aTex.v;
+    bTex.v = 1 - bTex.v;
+    cTex.v = 1 - cTex.v;
 
     // Create vector points
     vec4 a = {static_cast<float>(x0), static_cast<float>(y0), z0, w0};
