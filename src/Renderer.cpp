@@ -79,7 +79,7 @@ void Renderer::Update() {
 
     millisecsPreviousFrame = SDL_GetTicks();
 
-    mesh.UpdateRotation(vec3{0.01, 0.0, 0.0});
+    mesh.UpdateRotation(vec3{0.0, 0.01, 0.0});
     // Translate the mesh away from the camera
     mesh.SetTranslation(vec3{0.0, 0.0, 5.0});
 
@@ -171,7 +171,7 @@ void Renderer::Update() {
             projectedPoint.x += (WINDOW_WIDTH / 2.0);
             projectedPoint.y += (WINDOW_HEIGHT / 2.0);
 
-            projectedTriangle.points[i] = {projectedPoint.x, projectedPoint.y};
+            projectedTriangle.points[i] = {projectedPoint.x, projectedPoint.y, projectedPoint.z, projectedPoint.w};
         }
 
         projectedTriangle.texcoords[0] = {meshFace.a_uv.u, meshFace.a_uv.v};
@@ -217,9 +217,12 @@ void Renderer::Render() {
         if (settings.renderMethod == RenderMethod::RENDER_TEXTURED ||
             settings.renderMethod == RenderMethod::RENDER_TEXTURED_WIRE) {
             graphics->DrawTexturedTriangle(
-                    triangle.points[0].x, triangle.points[0].y, triangle.texcoords[0].u, triangle.texcoords[0].v,
-                    triangle.points[1].x, triangle.points[1].y, triangle.texcoords[1].u, triangle.texcoords[1].v,
-                    triangle.points[2].x, triangle.points[2].y, triangle.texcoords[2].u, triangle.texcoords[2].v,
+                    triangle.points[0].x, triangle.points[0].y, triangle.points[0].z, triangle.points[0].w,
+                    triangle.texcoords[0],
+                    triangle.points[1].x, triangle.points[1].y, triangle.points[1].z, triangle.points[1].w,
+                    triangle.texcoords[1],
+                    triangle.points[2].x, triangle.points[2].y, triangle.points[2].z, triangle.points[2].w,
+                    triangle.texcoords[2],
                     mesh.GetTexture()
             );
         }

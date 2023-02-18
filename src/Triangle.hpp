@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vec2.h"
+#include "Vec4.h"
 #include "Texture.h"
 
 struct TriangleFace {
@@ -10,7 +10,7 @@ struct TriangleFace {
 };
 
 struct Triangle {
-    vec2 points[3];
+    vec4 points[3];
     Texture texcoords[3];
     float avgDepth;
     uint32_t color;

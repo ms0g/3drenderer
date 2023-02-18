@@ -2,6 +2,7 @@
 #include "Vec2.h"
 #include "Vec3.h"
 #include "Texture.h"
+#include "Vec4.h"
 
 Graphics::Graphics(SDL_Renderer* renderer) {
     texture = SDL_CreateTexture(renderer,
@@ -29,24 +30,38 @@ void Graphics::DrawPixel(int x, int y, color_t color) {
         colorBuffer[(WINDOW_WIDTH * y) + x] = color;
 }
 
-void Graphics::DrawTexel(int x, int y, vec2 a, vec2 b, vec2 c,
-                         float u0, float v0, float u1, float v1, float u2, float v2,
+void Graphics::DrawTexel(int x, int y, vec4 a, vec4 b, vec4 c,
+                         Texture& aTex, Texture& bTex, Texture& cTex,
                          Texture* tex) {
     vec2 p = {static_cast<float>(x), static_cast<float>(y)};
 
-    vec3 weights = utils::barycentric_weights(a, b, c, p);
+    vec2 av2 = vec2::FromVec4(a);
+    vec2 bv2 = vec2::FromVec4(b);
+    vec2 cv2 = vec2::FromVec4(c);
+
+    vec3 weights = utils::barycentric_weights(av2, bv2, cv2, p);
 
     float alpha = weights.x;
     float beta = weights.y;
     float gamma = weights.z;
 
-    // Perform the interpolation of all U and V values using barycentric weights
-    float interpolated_U = u0 * alpha + u1 * beta + u2 * gamma;
-    float interpolated_V = v0 * alpha + v1 * beta + v2 * gamma;
+    // variables to store the interpolated values of u,v and reciprocal w (1/w) for the current pixel
+    float interpolated_U;
+    float interpolated_V;
+    float interpolated_R_W;
+
+    // Perform the interpolation of all U/w and V/w values using barycentric weights and a factor of 1/w
+    interpolated_U = (aTex.u / a.w) * alpha + (bTex.u / b.w) * beta + (cTex.u / c.w) * gamma;
+    interpolated_V = (aTex.v / a.w) * alpha + (bTex.v / b.w) * beta + (cTex.v / c.w) * gamma;
+    interpolated_R_W = (1 / a.w) * alpha + (1 / b.w) * beta + (1 / c.w) * gamma;
+
+    // Divide back the interpolated values by 1/w
+    interpolated_U /= interpolated_R_W;
+    interpolated_V /= interpolated_R_W;
 
     // Map the UV coordinate to the full texture width and height
-    int texX = abs(static_cast<int>(interpolated_U * (tex->width)));
-    int texY = abs(static_cast<int>(interpolated_V * (tex->height)));
+    int texX = abs(static_cast<int>(interpolated_U * tex->width));
+    int texY = abs(static_cast<int>(interpolated_V * tex->height));
 
     DrawPixel(x, y, tex->data[texY * tex->width + texX]);
 }
@@ -233,36 +248,42 @@ void Graphics::FillFlatTopTriangle(int x0, int y0, int x1, int y1, int x2, int y
 //                         u2, v2
 //
 ///////////////////////////////////////////////////////////////////////////////
-void Graphics::DrawTexturedTriangle(int x0, int y0, float u0, float v0,
-                                    int x1, int y1, float u1, float v1,
-                                    int x2, int y2, float u2, float v2,
+void Graphics::DrawTexturedTriangle(int x0, int y0, float z0, float w0, Texture& aTex,
+                                    int x1, int y1, float z1, float w1, Texture& bTex,
+                                    int x2, int y2, float z2, float w2, Texture& cTex,
                                     Texture* tex) {
     // We need to sort vertices by y-coordinate ascending (y0 < y1 < y2)
     if (y0 > y1) {
         std::swap(y0, y1);
         std::swap(x0, x1);
-        std::swap(u0, u1);
-        std::swap(v0, v1);
+        std::swap(z0, z1);
+        std::swap(w0, w1);
+        std::swap(aTex.u, bTex.u);
+        std::swap(aTex.v, bTex.v);
     }
 
     if (y1 > y2) {
         std::swap(y1, y2);
         std::swap(x1, x2);
-        std::swap(u1, u2);
-        std::swap(v1, v2);
+        std::swap(z1, z2);
+        std::swap(w1, w2);
+        std::swap(bTex.u, cTex.u);
+        std::swap(bTex.v, cTex.v);
     }
 
     if (y0 > y1) {
         std::swap(y0, y1);
         std::swap(x0, x1);
-        std::swap(u0, u1);
-        std::swap(v0, v1);
+        std::swap(z0, z1);
+        std::swap(w0, w1);
+        std::swap(aTex.u, bTex.u);
+        std::swap(aTex.v, bTex.v);
     }
 
     // Create vector points
-    vec2 a = {static_cast<float>(x0), static_cast<float>(y0)};
-    vec2 b = {static_cast<float>(x1), static_cast<float>(y1)};
-    vec2 c = {static_cast<float>(x2), static_cast<float>(y2)};
+    vec4 a = {static_cast<float>(x0), static_cast<float>(y0), z0, w0};
+    vec4 b = {static_cast<float>(x1), static_cast<float>(y1), z1, w1};
+    vec4 c = {static_cast<float>(x2), static_cast<float>(y2), z2, w2};
 
     /////////////////////////////////////////////////////////
     // Render the upper part of the triangle (flat-bottom) //
@@ -280,7 +301,7 @@ void Graphics::DrawTexturedTriangle(int x0, int y0, float u0, float v0,
                 std::swap(xStart, xEnd);
 
             for (int x = xStart; x < xEnd; ++x) {
-                DrawTexel(x, y, a, b, c, u0, v0, u1, v1, u2, v2, tex);
+                DrawTexel(x, y, a, b, c, aTex, bTex, cTex, tex);
             }
         }
     }
@@ -300,7 +321,7 @@ void Graphics::DrawTexturedTriangle(int x0, int y0, float u0, float v0,
                 std::swap(xStart, xEnd);
 
             for (int x = xStart; x < xEnd; ++x) {
-                DrawTexel(x, y, a, b, c, u0, v0, u1, v1, u2, v2, tex);
+                DrawTexel(x, y, a, b, c, aTex, bTex, cTex, tex);
             }
         }
     }

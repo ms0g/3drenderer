@@ -6,6 +6,7 @@
 
 class vec2;
 class vec3;
+class vec4;
 class Texture;
 
 namespace utils {
@@ -26,18 +27,16 @@ public:
 
     void DrawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color);
 
-    void DrawTexturedTriangle(int x0, int y0, float u0, float v0,
-                              int x1, int y1, float u1, float v1,
-                              int x2, int y2, float u2, float v2,
+    void DrawTexturedTriangle(int x0, int y0, float z0, float w0, Texture& aTex,
+                              int x1, int y1, float z1, float w1, Texture& bTex,
+                              int x2, int y2, float z2, float w2, Texture& cTex,
                               Texture* tex);
 
     void DDA(int x0, int y0, int x1, int y1, color_t color);
 
     void DrawPixel(int x, int y, color_t color);
 
-    void DrawTexel(int x, int y, vec2 a, vec2 b, vec2 c,
-                   float u0, float v0, float u1, float v1, float u2, float v2,
-                   Texture* tex);
+    void DrawTexel(int x, int y, vec4 a, vec4 b, vec4 c, Texture& aTex, Texture& bTex, Texture& cTex, Texture* tex);
 
     void FillTriangle(int x0, int y0, int x1, int y1, int x2, int y2, color_t color);
 
