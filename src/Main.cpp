@@ -30,7 +30,7 @@ int main() {
         }
     };
 
-    renderer.LoadMesh("../assets/f22.obj");
+    renderer.LoadMesh("../assets/suzanne.obj");
     while (isRunning) {
         ProcessInput();
         renderer.Update();

@@ -33,6 +33,7 @@ private:
     std::unique_ptr<Gui> gui;
 
     Mesh mesh{};
+    PngTexture texture{"../assets/cube.png"};
 
     Light light{0, 0, 1};
 

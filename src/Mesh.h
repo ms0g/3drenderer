@@ -5,14 +5,16 @@
 #include "Triangle.hpp"
 
 class MeshData;
-class Texture;
+class PngTexture;
 class Mesh {
 public:
     Mesh() = default;
 
     void SetData(MeshData& meshData);
 
-    [[nodiscard]] Texture* GetTexture() const;
+    [[nodiscard]] PngTexture* GetTexture() const;
+
+    void SetTexture(PngTexture* tex);
 
     [[nodiscard]] const vec3& GetRotation() const;
 
@@ -46,7 +48,7 @@ private:
     vec3 m_translation;
     std::vector<vec3> m_vertices;
     std::vector<TriangleFace> m_faces;
-    Texture* texture{};
+    PngTexture* texture{};
 };
 
 

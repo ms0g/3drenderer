@@ -67,9 +67,9 @@ Renderer::~Renderer() {
 }
 
 void Renderer::LoadMesh(const char* objFile) {
-    //auto meshData = ObjParser::Load(objFile);
-    auto meshData = ObjParser::load_cube_mesh_data();
+    auto meshData = ObjParser::Load(objFile);
     mesh.SetData(meshData);
+    mesh.SetTexture(&texture);
 }
 
 void Renderer::Update() {

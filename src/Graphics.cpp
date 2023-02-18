@@ -6,7 +6,7 @@
 
 Graphics::Graphics(SDL_Renderer* renderer) {
     texture = SDL_CreateTexture(renderer,
-                                SDL_PIXELFORMAT_ARGB8888,
+                                SDL_PIXELFORMAT_RGBA32,
                                 SDL_TEXTUREACCESS_STREAMING,
                                 WINDOW_WIDTH,
                                 WINDOW_HEIGHT);
@@ -32,7 +32,7 @@ void Graphics::DrawPixel(int x, int y, color_t color) {
 
 void Graphics::DrawTexel(int x, int y, vec4 a, vec4 b, vec4 c,
                          Texture& aTex, Texture& bTex, Texture& cTex,
-                         Texture* tex) {
+                         PngTexture* tex) {
     vec2 p = {static_cast<float>(x), static_cast<float>(y)};
 
     vec2 av2 = vec2::FromVec4(a);
@@ -251,7 +251,7 @@ void Graphics::FillFlatTopTriangle(int x0, int y0, int x1, int y1, int x2, int y
 void Graphics::DrawTexturedTriangle(int x0, int y0, float z0, float w0, Texture& aTex,
                                     int x1, int y1, float z1, float w1, Texture& bTex,
                                     int x2, int y2, float z2, float w2, Texture& cTex,
-                                    Texture* tex) {
+                                    PngTexture* tex) {
     // We need to sort vertices by y-coordinate ascending (y0 < y1 < y2)
     if (y0 > y1) {
         std::swap(y0, y1);
