@@ -1,6 +1,6 @@
 #pragma once
 
-
+class vec4;
 struct vec2 {
     float x, y;
 
@@ -25,6 +25,8 @@ struct vec2 {
     [[nodiscard]] float Dot(const vec2& v) const;       // v1.Dot(v2)
 
     [[nodiscard]] float Cross(const vec2& v) const;     // v1.Cross(v2)
+
+    static vec2 FromVec4(const vec4& v);                // vec2::FromVec4(vec4)
 
     vec2& operator=(const vec2& v);                     // v1 = v2
     bool operator==(const vec2& v) const;               // v1 == v2

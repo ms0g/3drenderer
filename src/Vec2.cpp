@@ -1,5 +1,6 @@
 #include "Vec2.h"
 #include <cmath>
+#include "Vec4.h"
 
 
 vec2::vec2() : x(0.0), y(0.0) {}
@@ -65,6 +66,10 @@ float vec2::Dot(const vec2& v) const {
 
 float vec2::Cross(const vec2& v) const {
     return x * v.y - y * v.x;
+}
+
+vec2 vec2::FromVec4(const vec4& v) {
+    return {v.x, v.y};
 }
 
 vec2& vec2::operator=(const vec2& v) = default;
