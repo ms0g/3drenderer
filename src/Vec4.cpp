@@ -26,7 +26,7 @@ void vec4::Scale(float n) {
     w *= n;
 }
 
-vec4 vec4::FromVec3(vec3 v) {
+vec4 vec4::FromVec3(const vec3& v) {
     return {v.x, v.y, v.z, 1};
 }
 

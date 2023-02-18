@@ -14,7 +14,7 @@ struct vec4 {
 
     [[nodiscard]] float Dot(const vec4& v) const;       // v1.Dot(v2)
 
-    static vec4 FromVec3(vec3 v);
+    static vec4 FromVec3(const vec3& v);                // vec4::FromVec3(v3)
 
     vec4& operator=(const vec4& v);                     // v1 = v2
     bool operator==(const vec4& v) const;               // v1 == v2
