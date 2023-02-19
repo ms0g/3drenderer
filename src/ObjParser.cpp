@@ -11,7 +11,7 @@ MeshData ObjParser::Load(const std::string& fileName) {
     if (!file.is_open()) return {};
 
     std::string line;
-    std::vector<Texture> texcoords;
+    std::vector<texcoord> texcoords;
 
     while (std::getline(file, line)) {
         // Vertex information
@@ -23,9 +23,9 @@ MeshData ObjParser::Load(const std::string& fileName) {
 
         // Texture coordinate information
         if (strncmp(line.c_str(), "vt ", 3) == 0) {
-            Texture texcoord;
-            sscanf(line.c_str(), "vt %f %f", &texcoord.u, &texcoord.v);
-            texcoords.push_back(texcoord);
+            texcoord coord;
+            sscanf(line.c_str(), "vt %f %f", &coord.u, &coord.v);
+            texcoords.push_back(coord);
         }
 
         // Face information

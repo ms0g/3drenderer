@@ -61,10 +61,10 @@ void Graphics::Render(SDL_Renderer* renderer) {
 //                         u2, v2
 //
 ///////////////////////////////////////////////////////////////////////////////
-void Graphics::DrawTexturedTriangle(int x0, int y0, float z0, float w0, Texture& aTex,
-                                    int x1, int y1, float z1, float w1, Texture& bTex,
-                                    int x2, int y2, float z2, float w2, Texture& cTex,
-                                    const PngTexture& tex) {
+void Graphics::DrawTexturedTriangle(int x0, int y0, float z0, float w0, texcoord& aTex,
+                                    int x1, int y1, float z1, float w1, texcoord& bTex,
+                                    int x2, int y2, float z2, float w2, texcoord& cTex,
+                                    const Texture& tex) {
     // We need to sort vertices by y-coordinate ascending (y0 < y1 < y2)
     if (y0 > y1) {
         std::swap(y0, y1);
@@ -286,8 +286,8 @@ void Graphics::DrawPixel(int x, int y, color_t color) {
 
 
 void Graphics::DrawTexel(int x, int y, vec4 a, vec4 b, vec4 c,
-                         Texture& aTex, Texture& bTex, Texture& cTex,
-                         const PngTexture& tex) {
+                         texcoord& aTex, texcoord& bTex, texcoord& cTex,
+                         const Texture& tex) {
     vec2 p = {static_cast<float>(x), static_cast<float>(y)};
 
     vec2 av2 = vec2::FromVec4(a);
@@ -315,14 +315,14 @@ void Graphics::DrawTexel(int x, int y, vec4 a, vec4 b, vec4 c,
     interpolated_V /= interpolated_R_W;
 
     // Map the UV coordinate to the full texture width and height
-    int texX = abs(static_cast<int>(interpolated_U * tex.width)) % tex.width;
-    int texY = abs(static_cast<int>(interpolated_V * tex.height)) % tex.height;
+    int texX = abs(static_cast<int>(interpolated_U * tex.GetWidth())) % tex.GetWidth();
+    int texY = abs(static_cast<int>(interpolated_V * tex.GetHeight())) % tex.GetHeight();
 
     // Adjust 1/w so the pixels that are closer to the camera have smaller values
     interpolated_R_W = 1.0 - interpolated_R_W;
 
     if (interpolated_R_W < depthBuffer[(WINDOW_WIDTH * y) + x]) {
-        DrawPixel(x, y, tex.data[texY * tex.width + texX]);
+        DrawPixel(x, y, tex.GetData()[texY * tex.GetWidth() + texX]);
         depthBuffer[(WINDOW_WIDTH * y) + x] = interpolated_R_W;
     }
 }

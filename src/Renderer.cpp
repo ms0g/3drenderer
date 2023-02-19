@@ -72,7 +72,7 @@ void Renderer::LoadMesh(const char* objFile) {
 }
 
 void Renderer::LoadTexture(const char* textureFile) {
-    auto texture = std::make_unique<PngTexture>(textureFile);
+    auto texture = std::make_unique<Texture>(textureFile);
     mesh.SetTexture(texture);
 }
 

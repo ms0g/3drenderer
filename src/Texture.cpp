@@ -3,14 +3,15 @@
 #include "../libs/upng/upng.h"
 
 
-Texture& Texture::operator=(const Texture& other) {
+texcoord& texcoord::operator=(const texcoord& other) {
     if (this == &other) return *this;
     u = other.u;
     v = other.v;
     return *this;
 }
 
-PngTexture::PngTexture(const char* filename) {
+
+Texture::Texture(const char* filename) {
     upng = upng_new_from_file(filename);
     if (upng != nullptr) {
         upng_decode(upng);
@@ -25,6 +26,22 @@ PngTexture::PngTexture(const char* filename) {
     }
 }
 
-PngTexture::~PngTexture() {
+
+Texture::~Texture() {
     upng_free(upng);
+}
+
+
+int Texture::GetWidth() const {
+    return width;
+}
+
+
+int Texture::GetHeight() const {
+    return height;
+}
+
+
+uint32_t* Texture::GetData() const {
+    return data;
 }

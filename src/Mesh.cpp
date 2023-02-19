@@ -14,11 +14,11 @@ void Mesh::SetData(MeshData& meshData) {
     m_faces = meshData.faces;
 }
 
-const PngTexture& Mesh::GetTexture() const {
+const Texture& Mesh::GetTexture() const {
     return *m_texture;
 }
 
-void Mesh::SetTexture(std::unique_ptr<PngTexture>& tex) {
+void Mesh::SetTexture(std::unique_ptr<Texture>& tex) {
     m_texture = std::move(tex);
 }
 
