@@ -182,23 +182,14 @@ void Renderer::Update() {
         projectedTriangle.texcoords[1] = {meshFace.b_uv.u, meshFace.b_uv.v};
         projectedTriangle.texcoords[2] = {meshFace.c_uv.u, meshFace.c_uv.v};
 
-
         // Calculate the shade intensity
         float lightIntensityFactor = -light.direction.Dot(normal);
 
         uint32_t triangleColor = Light::ApplyLightIntensity(meshFace.color, lightIntensityFactor);
         projectedTriangle.color = triangleColor;
 
-        //TODO:remove after z-buffer
-        float avgDepth = (transformedVertices[0].z + transformedVertices[1].z + transformedVertices[2].z) / 3.0;
-        projectedTriangle.avgDepth = avgDepth;
-
         trianglesToRender.push_back(projectedTriangle);
     }
-    //TODO:remove after z-buffer
-    std::sort(trianglesToRender.begin(), trianglesToRender.end(), [](const Triangle& t1, const Triangle& t2) {
-        return t1.avgDepth > t2.avgDepth;
-    });
 }
 
 void Renderer::Render() {
@@ -209,10 +200,10 @@ void Renderer::Render() {
         // Draw filled triangle
         if (settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE ||
             settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE_WIRE) {
-            graphics->FillTriangle(
-                    triangle.points[0].x, triangle.points[0].y,
-                    triangle.points[1].x, triangle.points[1].y,
-                    triangle.points[2].x, triangle.points[2].y,
+            graphics->DrawFilledTriangle(
+                    triangle.points[0].x, triangle.points[0].y, triangle.points[0].z, triangle.points[0].w,
+                    triangle.points[1].x, triangle.points[1].y, triangle.points[1].z, triangle.points[1].w,
+                    triangle.points[2].x, triangle.points[2].y, triangle.points[2].z, triangle.points[2].w,
                     triangle.color
             );
         }
@@ -251,11 +242,13 @@ void Renderer::Render() {
         }
     }
 
+    trianglesToRender.clear();
+
     graphics->Render(renderer);
     gui->Render(settings);
 
     graphics->Clear(0xFF000000);
-    trianglesToRender.clear();
+    graphics->ClearDepthBuffer();
 
     SDL_RenderPresent(renderer);
 }
