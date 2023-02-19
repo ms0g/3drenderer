@@ -1,5 +1,6 @@
 #pragma once
 
+class vec3;
 class vec4;
 struct mat4 {
     float m[4][4]{{0, 0, 0, 0},
@@ -20,6 +21,8 @@ struct mat4 {
     static mat4 RotationXMatrix(float angle);
 
     static mat4 RotationYMatrix(float angle);
+
+    static mat4 LookAt(vec3 eye, vec3 target, vec3 up);
 
     vec4 operator*(vec4 v) const;
 

@@ -1,6 +1,7 @@
 #include <cmath>
 #include "Mat4.h"
 #include "Vec4.h"
+#include "Vec3.h"
 
 mat4 mat4::IdentityMatrix() {
     return {{
@@ -45,10 +46,10 @@ mat4 mat4::PerspectiveMatrix(float fov, float aspect, float znear, float zfar) {
     // |                  0             0     zf/(zf-zn)  (-zf*zn)/(zf-zn) |
     // |                  0             0              1                 0 |
     mat4 _m;
-    _m.m[0][0] = aspect * (1/ tan(fov/2));
-    _m.m[1][1] = 1 / tan(fov/2);
-    _m.m[2][2] = zfar / (zfar-znear);
-    _m.m[2][3] = (-zfar * znear)/(zfar-znear);
+    _m.m[0][0] = aspect * (1 / tan(fov / 2));
+    _m.m[1][1] = 1 / tan(fov / 2);
+    _m.m[2][2] = zfar / (zfar - znear);
+    _m.m[2][3] = (-zfar * znear) / (zfar - znear);
     _m.m[3][2] = 1.0;
 
     return _m;
@@ -98,6 +99,24 @@ mat4 mat4::RotationYMatrix(float angle) {
     _m.m[2][2] = cos(angle);
 
     return _m;
+}
+
+mat4 mat4::LookAt(vec3 eye, vec3 target, vec3 up) {
+    vec3 z = target - eye;
+    z.Normalize();
+
+    vec3 x = up.Cross(z);
+    x.Normalize();
+
+    vec3 y = z.Cross(x);
+
+    return {{
+        {x.x, x.y, x.z, -x.Dot(eye)},
+        {y.x, y.y, y.z, -y.Dot(eye)},
+        {z.x, z.y, z.z, -z.Dot(eye)},
+        {  0,   0,   0,    1       }
+    }};
+
 }
 
 vec4 mat4::operator*(vec4 v) const {

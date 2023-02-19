@@ -58,6 +58,23 @@ void App::Input() {
         case SDL_KEYDOWN:
             if (event.key.keysym.sym == SDLK_ESCAPE)
                 isRunning = false;
+            if (event.key.keysym.sym == SDLK_UP)
+                camera.UpdatePosition({0.0, static_cast<float>(3.0 * deltaTime), 0.0});
+            if (event.key.keysym.sym == SDLK_DOWN)
+                camera.UpdatePosition({0.0, -static_cast<float>(3.0 * deltaTime), 0.0});
+            if (event.key.keysym.sym == SDLK_a)
+                camera.UpdateYaw(1.0 * deltaTime);
+            if (event.key.keysym.sym == SDLK_d)
+                camera.UpdateYaw(-1.0 * deltaTime);
+            if (event.key.keysym.sym == SDLK_w) {
+                camera.SetForwardVelocity(camera.GetDirection() * 5.0 * deltaTime);
+                camera.SetPosition(camera.GetPosition() + camera.GetForwardVelocity());
+            }
+            if (event.key.keysym.sym == SDLK_s) {
+                camera.SetForwardVelocity(camera.GetDirection() * 5.0 * deltaTime);
+                camera.SetPosition(camera.GetPosition() - camera.GetForwardVelocity());
+            }
+
             break;
     }
 }
@@ -67,22 +84,28 @@ void App::Update() {
     if (timeToWait > 0 && timeToWait <= MILLISECS_PER_FRAME)
         SDL_Delay(timeToWait);
 
-    float deltaTime = (SDL_GetTicks() - millisecsPreviousFrame) / 1000.0;
+    deltaTime = (SDL_GetTicks() - millisecsPreviousFrame) / 1000.0;
 
     millisecsPreviousFrame = SDL_GetTicks();
 
-    mesh.UpdateRotation({static_cast<float>(0.6 * deltaTime),
-                         static_cast<float>(0.6 * deltaTime),
-                         static_cast<float>(0.6 * deltaTime)});
+    mesh.UpdateRotation({static_cast<float>(0.0 * deltaTime),
+                         static_cast<float>(0.0 * deltaTime),
+                         static_cast<float>(0.0 * deltaTime)});
     // Translate the mesh away from the camera
     mesh.SetTranslation({0.0, 0.0, 5.0});
 
-    camera.UpdatePosition({static_cast<float>(0.02 * deltaTime),
-                           static_cast<float>(0.04 * deltaTime),
-                           0.0});
-    // Create the view matrix
-    vec3 target = {0, 0, 4.0};
+    // Initialize the target positive z-axis
+    vec3 target = {0, 0, 1};
+
+    mat4 cameraYawRotation = mat4::RotationYMatrix(camera.GetYaw());
+    vec3 direction = vec3::FromVec4(cameraYawRotation * vec4::FromVec3(target));
+    camera.SetDirection(direction);
+
+    // Offset the camera position in the direction where the camera is pointing at
+    target = camera.GetPosition() + camera.GetDirection();
+
     vec3 up = {0, 1, 0};
+    // Create the view matrix
     mat4 viewMatrix = mat4::LookAt(camera.GetPosition(), target, up);
 
     // Create scale matrix that will be used to multiply the mesh vertices;
