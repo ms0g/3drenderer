@@ -19,11 +19,11 @@ public:
 
     ~Texture();
 
-    int GetWidth() const;
+    [[nodiscard]] int GetWidth() const;
 
-    int GetHeight() const;
+    [[nodiscard]] int GetHeight() const;
 
-    uint32_t* GetData() const;
+    [[nodiscard]] uint32_t* GetData() const;
 
 private:
     int width{}, height{};
