@@ -31,9 +31,7 @@ void Mesh::SetRotation(const vec3& rotation) {
 }
 
 void Mesh::UpdateRotation(const vec3& rotation) {
-    m_rotation.x += rotation.x;
-    m_rotation.y += rotation.y;
-    m_rotation.z += rotation.z;
+    m_rotation += rotation;
 }
 
 const vec3& Mesh::GetScale() const {

@@ -1,91 +1,89 @@
-#include "Renderer.h"
-#include <iostream>
+#include "App.h"
+#include <SDL2/SDL.h>
 #include "ObjParser.h"
-#include "Graphics.h"
-#include "Gui.h"
 #include "MeshData.hpp"
-#include "Vec4.h"
-#include "Mat4.h"
+#include "../libs/imgui/imgui_impl_sdl.h"
 
-Renderer::Renderer() {
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        std::cerr << "Error initializing SDL" << std::endl;
-        return;
-    }
 
-    SDL_DisplayMode displayMode;
-    SDL_GetCurrentDisplayMode(0, &displayMode);
+App::App(const char* objFile, const char* textureFile) {
+    // Create Graphics
+    graphics = std::make_unique<Graphics>();
 
-    window = SDL_CreateWindow(
-            nullptr,
-            SDL_WINDOWPOS_CENTERED,
-            SDL_WINDOWPOS_CENTERED,
-            displayMode.w,
-            displayMode.h,
-            SDL_WINDOW_BORDERLESS);
+    // Open Window
+    isRunning = graphics->OpenWindow();
 
-    if (!window) {
-        std::cerr << "Error creating SDL Window";
-        return;
-    }
-
-    renderer = SDL_CreateRenderer(
-            window,
-            -1,
-            SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (!renderer) {
-        std::cerr << "Error creating SDL Renderer" << std::endl;
-        return;
-    }
-
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetWindowFullscreen(window, SDL_WINDOW_RESIZABLE);
-
-    // Camera settings
-    cameraPos = {0, 0, 0};
+    // Create gui
+    gui = std::make_unique<Gui>(graphics->GetSDLWindow(), graphics->GetSDLRenderer());
 
     // Perspective Matrix
     projectionMatrix = mat4::PerspectiveMatrix(FOV, ASPECT, ZNEAR, ZFAR);
 
-    // Create color buffer
-    graphics = std::make_unique<Graphics>(renderer);
-
-    // Create Gui
-    gui = std::make_unique<Gui>(window, renderer);
-
     // Render settings
     settings.cullMethod = CullMethod::CULL_BACKFACE;
-    settings.renderMethod = RenderMethod::RENDER_FILL_TRIANGLE;
-}
+    settings.renderMethod = RenderMethod::RENDER_TEXTURED;
 
-
-Renderer::~Renderer() {
-    // Clean up SDL
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
-    SDL_Quit();
-}
-
-void Renderer::LoadMesh(const char* objFile) {
+    // Load Mesh
     auto meshData = ObjParser::Load(objFile);
     mesh.SetData(meshData);
-}
 
-void Renderer::LoadTexture(const char* textureFile) {
+    // Load texture
     auto texture = std::make_unique<Texture>(textureFile);
     mesh.SetTexture(texture);
+
 }
 
-void Renderer::Update() {
+
+bool App::IsRunning() const {
+    return isRunning;
+}
+
+
+void App::Input() {
+    SDL_Event event;
+    SDL_PollEvent(&event);
+
+    ImGui_ImplSDL2_ProcessEvent(&event);
+    ImGuiIO& io = ImGui::GetIO();
+
+    int mouseX, mouseY;
+    const int buttons = SDL_GetMouseState(&mouseX, &mouseY);
+    io.MousePos = ImVec2(mouseX, mouseY);
+    io.MouseDown[0] = buttons & SDL_BUTTON(SDL_BUTTON_LEFT);
+    io.MouseDown[1] = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
+
+    switch (event.type) {
+        case SDL_QUIT:
+            isRunning = false;
+            break;
+        case SDL_KEYDOWN:
+            if (event.key.keysym.sym == SDLK_ESCAPE)
+                isRunning = false;
+            break;
+    }
+}
+
+void App::Update() {
     auto timeToWait = MILLISECS_PER_FRAME - (SDL_GetTicks() - millisecsPreviousFrame);
     if (timeToWait > 0 && timeToWait <= MILLISECS_PER_FRAME)
         SDL_Delay(timeToWait);
 
+    float deltaTime = (SDL_GetTicks() - millisecsPreviousFrame) / 1000.0;
+
     millisecsPreviousFrame = SDL_GetTicks();
 
-    mesh.UpdateRotation(vec3{0.01, 0.01, 0.01});
+    mesh.UpdateRotation({static_cast<float>(0.6 * deltaTime),
+                         static_cast<float>(0.6 * deltaTime),
+                         static_cast<float>(0.6 * deltaTime)});
     // Translate the mesh away from the camera
-    mesh.SetTranslation(vec3{0.0, 0.0, 5.0});
+    mesh.SetTranslation({0.0, 0.0, 5.0});
+
+    camera.UpdatePosition({static_cast<float>(0.02 * deltaTime),
+                           static_cast<float>(0.04 * deltaTime),
+                           0.0});
+    // Create the view matrix
+    vec3 target = {0, 0, 4.0};
+    vec3 up = {0, 1, 0};
+    mat4 viewMatrix = mat4::LookAt(camera.GetPosition(), target, up);
 
     // Create scale matrix that will be used to multiply the mesh vertices;
     mat4 scaleMatrix = mat4::ScaleMatrix(mesh.GetScale().x, mesh.GetScale().y, mesh.GetScale().z);
@@ -121,6 +119,7 @@ void Renderer::Update() {
             worldMatrix = translationMatrix * worldMatrix;
 
             transformedVertex = worldMatrix * transformedVertex;
+            transformedVertex = viewMatrix * transformedVertex;
 
             transformedVertices[i] = transformedVertex;
         }
@@ -141,7 +140,8 @@ void Renderer::Update() {
         normal.Normalize();
 
         // Find the vector between a point in the triangle and camera origin
-        vec3 cameraRay = cameraPos - vecA;
+        vec3 origin = {0, 0, 0};
+        vec3 cameraRay = origin - vecA;
 
         // Calculate how aligned the normal onto the camera ray
         float dotNormalCamera = normal.Dot(cameraRay);
@@ -192,8 +192,10 @@ void Renderer::Update() {
     }
 }
 
-void Renderer::Render() {
-    DrawGrid();
+void App::Render() {
+    graphics->RenderClear();
+
+    graphics->DrawGrid();
 
     // Loop all projected triangles and render them
     for (auto& triangle: trianglesToRender) {
@@ -244,26 +246,11 @@ void Renderer::Render() {
 
     trianglesToRender.clear();
 
-    graphics->Render(renderer);
+    graphics->UpdateColorBuffer();
     gui->Render(settings);
 
-    graphics->Clear(0xFF000000);
+    graphics->ClearColorBuffer(0xFF000000);
     graphics->ClearDepthBuffer();
 
-    SDL_RenderPresent(renderer);
+    graphics->RenderPresent();
 }
-
-void Renderer::DrawGrid() {
-    for (int x = 0; x < WINDOW_WIDTH; x += 10) {
-        for (int y = 0; y < WINDOW_HEIGHT; y += 10) {
-            graphics->DrawPixel(x, y, 0xFF444444);
-        }
-    }
-}
-
-
-
-
-
-
-

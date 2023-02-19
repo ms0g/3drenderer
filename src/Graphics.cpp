@@ -1,24 +1,73 @@
 #include "Graphics.h"
+#include <iostream>
 #include "Vec2.h"
 #include "Vec3.h"
 #include "Texture.h"
 #include "Vec4.h"
 
-Graphics::Graphics(SDL_Renderer* renderer) {
+
+Graphics::~Graphics() {
+    // Clean up SDL
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyTexture(texture);
+    SDL_Quit();
+}
+
+bool Graphics::OpenWindow() {
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+        std::cerr << "Error initializing SDL" << std::endl;
+        return false;
+    }
+
+    SDL_DisplayMode displayMode;
+    SDL_GetCurrentDisplayMode(0, &displayMode);
+
+    window = SDL_CreateWindow(
+            nullptr,
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOWPOS_CENTERED,
+            displayMode.w,
+            displayMode.h,
+            SDL_WINDOW_BORDERLESS);
+
+    if (!window) {
+        std::cerr << "Error creating SDL Window";
+        return false;
+    }
+
+    renderer = SDL_CreateRenderer(
+            window,
+            -1,
+            SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+    if (!renderer) {
+        std::cerr << "Error creating SDL Renderer" << std::endl;
+        return false;
+    }
+
+    // Create texture
     texture = SDL_CreateTexture(renderer,
                                 SDL_PIXELFORMAT_RGBA32,
                                 SDL_TEXTUREACCESS_STREAMING,
                                 WINDOW_WIDTH,
                                 WINDOW_HEIGHT);
+
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetWindowFullscreen(window, SDL_WINDOW_RESIZABLE);
+
+    return true;
 }
 
-
-Graphics::~Graphics() {
-    SDL_DestroyTexture(texture);
+SDL_Window* Graphics::GetSDLWindow() const {
+    return window;
 }
 
+SDL_Renderer* Graphics::GetSDLRenderer() const {
+    return renderer;
+}
 
-void Graphics::Clear(color_t color) {
+void Graphics::ClearColorBuffer(color_t color) {
     colorBuffer.fill(color);
 }
 
@@ -28,13 +77,32 @@ void Graphics::ClearDepthBuffer() {
 }
 
 
-void Graphics::Render(SDL_Renderer* renderer) {
+void Graphics::RenderClear() {
+    SDL_RenderClear(renderer);
+}
+
+
+void Graphics::RenderPresent() {
+    SDL_RenderPresent(renderer);
+}
+
+
+void Graphics::UpdateColorBuffer() {
     SDL_UpdateTexture(texture,
                       nullptr,
                       colorBuffer.data(),
                       WINDOW_WIDTH * sizeof(color_t));
 
     SDL_RenderCopy(renderer, texture, nullptr, nullptr);
+}
+
+
+void Graphics::DrawGrid() {
+    for (int x = 0; x < WINDOW_WIDTH; x += 10) {
+        for (int y = 0; y < WINDOW_HEIGHT; y += 10) {
+            DrawPixel(x, y, 0xFF444444);
+        }
+    }
 }
 
 

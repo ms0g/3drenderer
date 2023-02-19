@@ -11,15 +11,27 @@ class texcoord;
 class Texture;
 class Graphics {
 public:
-    explicit Graphics(SDL_Renderer* renderer);
+    Graphics() = default;
 
     ~Graphics();
 
-    void Clear(color_t color);
+    bool OpenWindow();
+
+    [[nodiscard]] SDL_Window* GetSDLWindow() const;
+
+    [[nodiscard]] SDL_Renderer* GetSDLRenderer() const;
+
+    void ClearColorBuffer(color_t color);
 
     void ClearDepthBuffer();
 
-    void Render(SDL_Renderer* renderer);
+    void RenderClear();
+
+    void RenderPresent();
+
+    void UpdateColorBuffer();
+
+    void DrawGrid();
 
     void DrawTexturedTriangle(int x0, int y0, float z0, float w0, texcoord& aTex,
                               int x1, int y1, float z1, float w1, texcoord& bTex,
@@ -47,9 +59,10 @@ public:
 
 private:
     SDL_Texture* texture{};
+    SDL_Window* window{};
+    SDL_Renderer* renderer{};
     std::array<color_t, WINDOW_WIDTH * WINDOW_HEIGHT> colorBuffer{};
     std::array<float, WINDOW_WIDTH * WINDOW_HEIGHT> depthBuffer{};
-
 };
 
 namespace utils {
