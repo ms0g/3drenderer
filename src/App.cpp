@@ -40,42 +40,42 @@ bool App::IsRunning() const {
 
 void App::Input() {
     SDL_Event event;
-    SDL_PollEvent(&event);
 
-    ImGui_ImplSDL2_ProcessEvent(&event);
-    ImGuiIO& io = ImGui::GetIO();
+    while (SDL_PollEvent(&event)) {
+        ImGui_ImplSDL2_ProcessEvent(&event);
+        ImGuiIO& io = ImGui::GetIO();
 
-    int mouseX, mouseY;
-    const int buttons = SDL_GetMouseState(&mouseX, &mouseY);
-    io.MousePos = ImVec2(mouseX, mouseY);
-    io.MouseDown[0] = buttons & SDL_BUTTON(SDL_BUTTON_LEFT);
-    io.MouseDown[1] = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
+        int mouseX, mouseY;
+        const int buttons = SDL_GetMouseState(&mouseX, &mouseY);
+        io.MousePos = ImVec2(mouseX, mouseY);
+        io.MouseDown[0] = buttons & SDL_BUTTON(SDL_BUTTON_LEFT);
+        io.MouseDown[1] = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
 
-    switch (event.type) {
-        case SDL_QUIT:
-            isRunning = false;
-            break;
-        case SDL_KEYDOWN:
-            if (event.key.keysym.sym == SDLK_ESCAPE)
+        switch (event.type) {
+            case SDL_QUIT:
                 isRunning = false;
-            if (event.key.keysym.sym == SDLK_UP)
-                camera.UpdatePosition({0.0, static_cast<float>(3.0 * deltaTime), 0.0});
-            if (event.key.keysym.sym == SDLK_DOWN)
-                camera.UpdatePosition({0.0, -static_cast<float>(3.0 * deltaTime), 0.0});
-            if (event.key.keysym.sym == SDLK_a)
-                camera.UpdateYaw(1.0 * deltaTime);
-            if (event.key.keysym.sym == SDLK_d)
-                camera.UpdateYaw(-1.0 * deltaTime);
-            if (event.key.keysym.sym == SDLK_w) {
-                camera.SetForwardVelocity(camera.GetDirection() * 5.0 * deltaTime);
-                camera.SetPosition(camera.GetPosition() + camera.GetForwardVelocity());
-            }
-            if (event.key.keysym.sym == SDLK_s) {
-                camera.SetForwardVelocity(camera.GetDirection() * 5.0 * deltaTime);
-                camera.SetPosition(camera.GetPosition() - camera.GetForwardVelocity());
-            }
-
-            break;
+                break;
+            case SDL_KEYDOWN:
+                if (event.key.keysym.sym == SDLK_ESCAPE)
+                    isRunning = false;
+                if (event.key.keysym.sym == SDLK_UP)
+                    camera.UpdatePosition({0.0, static_cast<float>(3.0 * deltaTime), 0.0});
+                if (event.key.keysym.sym == SDLK_DOWN)
+                    camera.UpdatePosition({0.0, -static_cast<float>(3.0 * deltaTime), 0.0});
+                if (event.key.keysym.sym == SDLK_a)
+                    camera.UpdateYaw(1.0 * deltaTime);
+                if (event.key.keysym.sym == SDLK_d)
+                    camera.UpdateYaw(-1.0 * deltaTime);
+                if (event.key.keysym.sym == SDLK_w) {
+                    camera.SetForwardVelocity(camera.GetDirection() * 5.0 * deltaTime);
+                    camera.SetPosition(camera.GetPosition() + camera.GetForwardVelocity());
+                }
+                if (event.key.keysym.sym == SDLK_s) {
+                    camera.SetForwardVelocity(camera.GetDirection() * 5.0 * deltaTime);
+                    camera.SetPosition(camera.GetPosition() - camera.GetForwardVelocity());
+                }
+                break;
+        }
     }
 }
 
