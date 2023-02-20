@@ -2,7 +2,7 @@
 
 #include <vector>
 #include "Vec3.h"
-#include "Triangle.hpp"
+#include "Triangle.h"
 
 struct MeshData {
     std::vector<vec3> vertices;

@@ -31,6 +31,8 @@ public:
 
     inline bool ShouldRenderWireVertex(Settings& settings);
 
+    inline bool ShouldBackfaceCulling(Settings& settings);
+
     void ClearColorBuffer(color_t color);
 
     void ClearDepthBuffer();
@@ -97,6 +99,10 @@ bool Graphics::ShouldRenderWireFrame(Settings& settings) {
 
 bool Graphics::ShouldRenderWireVertex(Settings& settings) {
     return settings.renderMethod == RenderMethod::RENDER_WIRE_VERTEX;
+}
+
+bool Graphics::ShouldBackfaceCulling(Settings& settings) {
+    return settings.cullMethod == CullMethod::CULL_BACKFACE;
 }
 
 namespace utils {

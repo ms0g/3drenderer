@@ -1,7 +1,7 @@
 #include "Clipping.h"
 #include <cmath>
 #include "Constants.hpp"
-#include "Triangle.hpp"
+#include "Triangle.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

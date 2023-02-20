@@ -16,3 +16,5 @@ struct Triangle {
     uint32_t color;
     Texture* texture;
 };
+
+vec3 ComputeTriangleNormal(vec4* vertices);

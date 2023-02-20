@@ -11,7 +11,7 @@
 #include "Clipping.h"
 #include "Constants.hpp"
 #include "Settings.hpp"
-#include "Triangle.hpp"
+#include "Triangle.h"
 
 
 class App {
@@ -26,6 +26,8 @@ public:
     void Update();
     void Render();
 private:
+    void ProcessGraphicsPipeline(Mesh& mesh);
+
     bool isRunning;
     std::unique_ptr<Graphics> graphics;
     std::unique_ptr<Gui> gui;
