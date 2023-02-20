@@ -1,4 +1,4 @@
-# Pixjin3d
+# 3D Renderer
 A CPU-based 3D Render Engine
 
 ![runway](assets/runway.gif)
