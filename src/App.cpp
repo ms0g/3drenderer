@@ -247,8 +247,7 @@ void App::Render() {
     // Loop all projected triangles and render them
     for (auto& triangle: trianglesToRender) {
         // Draw filled triangle
-        if (settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE ||
-            settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE_WIRE) {
+        if (graphics->ShouldRenderFilledTriangle(settings)) {
             graphics->DrawFilledTriangle(
                     triangle.points[0].x, triangle.points[0].y, triangle.points[0].z, triangle.points[0].w,
                     triangle.points[1].x, triangle.points[1].y, triangle.points[1].z, triangle.points[1].w,
@@ -258,8 +257,7 @@ void App::Render() {
         }
 
         // Draw textured triangle
-        if (settings.renderMethod == RenderMethod::RENDER_TEXTURED ||
-            settings.renderMethod == RenderMethod::RENDER_TEXTURED_WIRE) {
+        if (graphics->ShouldRenderTexturedTriangle(settings)) {
             graphics->DrawTexturedTriangle(
                     triangle.points[0].x, triangle.points[0].y, triangle.points[0].z, triangle.points[0].w,
                     triangle.texcoords[0],
@@ -272,10 +270,7 @@ void App::Render() {
         }
 
         // Draw triangle wireframe
-        if (settings.renderMethod == RenderMethod::RENDER_WIRE ||
-            settings.renderMethod == RenderMethod::RENDER_WIRE_VERTEX ||
-            settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE_WIRE ||
-            settings.renderMethod == RenderMethod::RENDER_TEXTURED_WIRE) {
+        if (graphics->ShouldRenderWireFrame(settings)) {
             graphics->DrawTriangle(
                     triangle.points[0].x, triangle.points[0].y,
                     triangle.points[1].x, triangle.points[1].y,
@@ -284,7 +279,7 @@ void App::Render() {
             );
         }
 
-        if (settings.renderMethod == RenderMethod::RENDER_WIRE_VERTEX) {
+        if (graphics->ShouldRenderWireVertex(settings)) {
             graphics->DrawRect(triangle.points[0].x - 3, triangle.points[0].y, 6, 6, 0xFFFF0000);
             graphics->DrawRect(triangle.points[1].x - 3, triangle.points[1].y, 6, 6, 0xFFFF0000);
             graphics->DrawRect(triangle.points[2].x - 3, triangle.points[2].y, 6, 6, 0xFFFF0000);

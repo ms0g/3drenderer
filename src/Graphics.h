@@ -3,6 +3,7 @@
 #include <array>
 #include <SDL2/SDL.h>
 #include "Constants.hpp"
+#include "Settings.hpp"
 
 
 class vec2;
@@ -21,6 +22,14 @@ public:
     [[nodiscard]] SDL_Window* GetSDLWindow() const;
 
     [[nodiscard]] SDL_Renderer* GetSDLRenderer() const;
+
+    inline bool ShouldRenderFilledTriangle(Settings& settings);
+
+    inline bool ShouldRenderTexturedTriangle(Settings& settings);
+
+    inline bool ShouldRenderWireFrame(Settings& settings);
+
+    inline bool ShouldRenderWireVertex(Settings& settings);
 
     void ClearColorBuffer(color_t color);
 
@@ -65,6 +74,28 @@ private:
     std::array<color_t, WINDOW_WIDTH * WINDOW_HEIGHT> colorBuffer{};
     std::array<float, WINDOW_WIDTH * WINDOW_HEIGHT> depthBuffer{};
 };
+
+
+bool Graphics::ShouldRenderFilledTriangle(Settings& settings) {
+    return settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE ||
+           settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE_WIRE;
+}
+
+bool Graphics::ShouldRenderTexturedTriangle(Settings& settings) {
+    return settings.renderMethod == RenderMethod::RENDER_TEXTURED ||
+           settings.renderMethod == RenderMethod::RENDER_TEXTURED_WIRE;
+}
+
+bool Graphics::ShouldRenderWireFrame(Settings& settings) {
+    return settings.renderMethod == RenderMethod::RENDER_WIRE ||
+           settings.renderMethod == RenderMethod::RENDER_WIRE_VERTEX ||
+           settings.renderMethod == RenderMethod::RENDER_FILL_TRIANGLE_WIRE ||
+           settings.renderMethod == RenderMethod::RENDER_TEXTURED_WIRE;
+}
+
+bool Graphics::ShouldRenderWireVertex(Settings& settings) {
+    return settings.renderMethod == RenderMethod::RENDER_WIRE_VERTEX;
+}
 
 namespace utils {
 vec3 barycentric_weights(vec2 a, vec2 b, vec2 c, vec2 p);
