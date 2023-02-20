@@ -56,7 +56,7 @@ mat4 mat4::PerspectiveMatrix(float fov, float aspect, float znear, float zfar) {
 
 }
 
-mat4 mat4::RotationZMatrix(float angle) {
+mat4 mat4::RotationMatrixZ(float angle) {
     // | c -s  0  0 |
     // | s  c  0  0 |
     // | 0  0  1  0 |
@@ -71,7 +71,7 @@ mat4 mat4::RotationZMatrix(float angle) {
     return _m;
 }
 
-mat4 mat4::RotationXMatrix(float angle) {
+mat4 mat4::RotationMatrixX(float angle) {
     // | 1  0  0  0 |
     // | 0  c -s  0 |
     // | 0  s  c  0 |
@@ -86,7 +86,7 @@ mat4 mat4::RotationXMatrix(float angle) {
     return _m;
 }
 
-mat4 mat4::RotationYMatrix(float angle) {
+mat4 mat4::RotationMatrixY(float angle) {
     // |  c  0  s  0 |
     // |  0  1  0  0 |
     // | -s  0  c  0 |

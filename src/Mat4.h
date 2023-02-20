@@ -16,11 +16,11 @@ struct mat4 {
 
     static mat4 PerspectiveMatrix(float fov, float aspect, float znear, float zfar);
 
-    static mat4 RotationZMatrix(float angle);
+    static mat4 RotationMatrixZ(float angle);
 
-    static mat4 RotationXMatrix(float angle);
+    static mat4 RotationMatrixX(float angle);
 
-    static mat4 RotationYMatrix(float angle);
+    static mat4 RotationMatrixY(float angle);
 
     static mat4 LookAt(vec3 eye, vec3 target, vec3 up);
 

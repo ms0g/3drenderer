@@ -100,7 +100,7 @@ void App::Update() {
     // Initialize the target positive z-axis
     vec3 target = {0, 0, 1};
 
-    mat4 cameraYawRotation = mat4::RotationYMatrix(camera.GetYaw());
+    mat4 cameraYawRotation = mat4::RotationMatrixY(camera.GetYaw());
     vec3 direction = vec3::FromVec4(cameraYawRotation * vec4::FromVec3(target));
     camera.SetDirection(direction);
 
@@ -118,9 +118,9 @@ void App::Update() {
                                                      mesh.GetTranslation().y,
                                                      mesh.GetTranslation().z);
 
-    mat4 rotationXMatrix = mat4::RotationXMatrix(mesh.GetRotation().x);
-    mat4 rotationYMatrix = mat4::RotationYMatrix(mesh.GetRotation().y);
-    mat4 rotationZMatrix = mat4::RotationZMatrix(mesh.GetRotation().z);
+    mat4 rotationXMatrix = mat4::RotationMatrixX(mesh.GetRotation().x);
+    mat4 rotationYMatrix = mat4::RotationMatrixY(mesh.GetRotation().y);
+    mat4 rotationZMatrix = mat4::RotationMatrixZ(mesh.GetRotation().z);
 
 
     for (const auto& meshFace: mesh.GetFaces()) {
