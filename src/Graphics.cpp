@@ -8,8 +8,8 @@
 
 Graphics::~Graphics() {
     // Clean up SDL
-    SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
     SDL_DestroyTexture(texture);
     SDL_Quit();
 }

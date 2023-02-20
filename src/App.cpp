@@ -59,11 +59,11 @@ void App::Input() {
                     break;
                 }
                 if (event.key.keysym.sym == SDLK_w) {
-                    camera.UpdatePitch(3.0 * deltaTime);
+                    camera.UpdatePitch(-3.0 * deltaTime);
                     break;
                 }
                 if (event.key.keysym.sym == SDLK_s) {
-                    camera.UpdatePitch(-3.0 * deltaTime);
+                    camera.UpdatePitch(3.0 * deltaTime);
                     break;
                 }
                 if (event.key.keysym.sym == SDLK_LEFT) {
