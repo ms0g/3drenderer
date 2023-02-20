@@ -10,5 +10,4 @@ public:
     ~Gui();
 
     void Render(Settings& settings);
-
 };

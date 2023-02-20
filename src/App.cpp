@@ -32,7 +32,6 @@ App::App(const char* objFile, const char* textureFile) {
 
     // Initialize frustum planes
     frustum.InitializePlanes();
-
 }
 
 
@@ -81,6 +80,7 @@ void App::Input() {
         }
     }
 }
+
 
 void App::Update() {
     auto timeToWait = MILLISECS_PER_FRAME - (SDL_GetTicks() - millisecsPreviousFrame);
@@ -237,6 +237,7 @@ void App::Update() {
         }
     }
 }
+
 
 void App::Render() {
     graphics->RenderClear();

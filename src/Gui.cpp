@@ -5,6 +5,7 @@
 #include "../libs/imgui/imgui_impl_sdlrenderer.h"
 #include "../libs/imgui/imgui_internal.h"
 
+
 Gui::Gui(SDL_Window* window, SDL_Renderer* renderer) {
     // Initialize the ImGui context
     IMGUI_CHECKVERSION();
@@ -52,7 +53,6 @@ void Gui::Render(Settings& settings) {
         }
     }
     ImGui::End();
-
 
     //Render ImGui
     ImGui::Render();

@@ -63,6 +63,7 @@ void Frustum::InitializePlanes() {
     m_planes[FRUSTUM::FAR_PLANE].normal.z = -1;
 }
 
+
 void Frustum::StartClipping(polygon_t& p) {
     ClipPolygonAgainstPlane(p, FRUSTUM::LEFT_PLANE);
     ClipPolygonAgainstPlane(p, FRUSTUM::RIGHT_PLANE);
@@ -163,6 +164,7 @@ void polygon_t::TrianglesFromPolygon(polygon_t& p, Triangle* triangles, int& num
     }
     numTriangles = p.numVertices - 2;
 }
+
 
 float utils::lerp(float a, float b, float t) {
     return a + t * (b - a);

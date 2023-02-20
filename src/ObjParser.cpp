@@ -3,6 +3,7 @@
 #include "Vec3.h"
 #include "MeshData.hpp"
 
+
 MeshData ObjParser::Load(const std::string& fileName) {
     MeshData data;
     std::ifstream file;

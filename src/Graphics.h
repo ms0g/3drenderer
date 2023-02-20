@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include "Constants.hpp"
 
+
 class vec2;
 class vec3;
 class vec4;

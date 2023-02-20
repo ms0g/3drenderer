@@ -3,6 +3,7 @@
 #include "Vec4.h"
 #include "Vec3.h"
 
+
 mat4 mat4::IdentityMatrix() {
     return {{
         {1, 0, 0, 0},
@@ -11,6 +12,7 @@ mat4 mat4::IdentityMatrix() {
         {0, 0, 0, 1}
     }};
 }
+
 
 mat4 mat4::ScaleMatrix(float sx, float sy, float sz) {
     // | sx  0  0  0 |
@@ -26,6 +28,7 @@ mat4 mat4::ScaleMatrix(float sx, float sy, float sz) {
     return _m;
 }
 
+
 mat4 mat4::TranslationMatrix(float tx, float ty, float tz) {
     // |  1  0  0  tx |
     // |  0  1  0  ty |
@@ -39,6 +42,7 @@ mat4 mat4::TranslationMatrix(float tx, float ty, float tz) {
 
     return _m;
 }
+
 
 mat4 mat4::PerspectiveMatrix(float fov, float aspect, float znear, float zfar) {
     // | (h/w)*1/tan(fov/2)             0              0                 0 |
@@ -56,6 +60,7 @@ mat4 mat4::PerspectiveMatrix(float fov, float aspect, float znear, float zfar) {
 
 }
 
+
 mat4 mat4::RotationMatrixZ(float angle) {
     // | c -s  0  0 |
     // | s  c  0  0 |
@@ -70,6 +75,7 @@ mat4 mat4::RotationMatrixZ(float angle) {
 
     return _m;
 }
+
 
 mat4 mat4::RotationMatrixX(float angle) {
     // | 1  0  0  0 |
@@ -86,6 +92,7 @@ mat4 mat4::RotationMatrixX(float angle) {
     return _m;
 }
 
+
 mat4 mat4::RotationMatrixY(float angle) {
     // |  c  0  s  0 |
     // |  0  1  0  0 |
@@ -100,6 +107,7 @@ mat4 mat4::RotationMatrixY(float angle) {
 
     return _m;
 }
+
 
 mat4 mat4::LookAt(vec3 eye, vec3 target, vec3 up) {
     vec3 z = target - eye;
@@ -119,6 +127,7 @@ mat4 mat4::LookAt(vec3 eye, vec3 target, vec3 up) {
 
 }
 
+
 vec4 mat4::operator*(vec4 v) const {
     vec4 _v{};
 
@@ -129,6 +138,7 @@ vec4 mat4::operator*(vec4 v) const {
 
     return _v;
 }
+
 
 mat4 mat4::operator*(mat4 m1) const {
     mat4 _m;

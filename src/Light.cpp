@@ -4,7 +4,6 @@ Light::Light(float x, float y, float z) {
     direction.x = x;
     direction.y = y;
     direction.z = z;
-
 }
 
 Light::Light(vec3 direction) : direction(direction) {}

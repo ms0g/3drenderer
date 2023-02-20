@@ -4,6 +4,7 @@
 #include "Vec3.h"
 #include "Triangle.hpp"
 
+
 class MeshData;
 class Texture;
 class Mesh {

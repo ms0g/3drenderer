@@ -1,5 +1,6 @@
 #include "Camera.h"
 
+
 Camera::Camera() :
         m_position({0, 0, 0}),
         m_direction({0, 0, 1}),
@@ -35,9 +36,11 @@ void Camera::SetForwardVelocity(const vec3& fwv) {
     m_forwardVelocity = fwv;
 }
 
+
 float Camera::GetYaw() const {
     return m_yaw;
 }
+
 
 void Camera::SetYaw(float yaw) {
     m_yaw = yaw;

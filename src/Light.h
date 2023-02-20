@@ -3,6 +3,7 @@
 #include <cstdint>
 #include "Vec3.h"
 
+
 struct Light {
     vec3 direction;
 

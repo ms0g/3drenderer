@@ -14,6 +14,7 @@ Graphics::~Graphics() {
     SDL_Quit();
 }
 
+
 bool Graphics::OpenWindow() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         std::cerr << "Error initializing SDL" << std::endl;
@@ -59,13 +60,16 @@ bool Graphics::OpenWindow() {
     return true;
 }
 
+
 SDL_Window* Graphics::GetSDLWindow() const {
     return window;
 }
 
+
 SDL_Renderer* Graphics::GetSDLRenderer() const {
     return renderer;
 }
+
 
 void Graphics::ClearColorBuffer(color_t color) {
     colorBuffer.fill(color);
@@ -348,8 +352,9 @@ void Graphics::DrawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, colo
 
 
 void Graphics::DrawPixel(int x, int y, color_t color) {
-    if (x >= 0 && x < WINDOW_WIDTH && y >= 0 && y < WINDOW_HEIGHT)
-        colorBuffer[(WINDOW_WIDTH * y) + x] = color;
+    if (x < 0 || x > WINDOW_WIDTH || y < 0 || y > WINDOW_HEIGHT)
+        return;
+    colorBuffer[(WINDOW_WIDTH * y) + x] = color;
 }
 
 
@@ -455,7 +460,6 @@ vec3 utils::barycentric_weights(vec2 a, vec2 b, vec2 c, vec2 p) {
     float gamma = 1 - alpha - beta;
 
     return {alpha, beta, gamma};
-
 }
 
 

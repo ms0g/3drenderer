@@ -2,6 +2,7 @@
 
 #include "Vec3.h"
 
+
 class Camera {
 public:
     Camera();
@@ -33,5 +34,4 @@ private:
     vec3 m_direction;
     vec3 m_forwardVelocity;
     float m_yaw;
-
 };

@@ -2,6 +2,7 @@
 
 #include <cstdint>
 
+
 struct texcoord {
     float u{}, v{};
 
