@@ -7,6 +7,8 @@ class Camera {
 public:
     Camera();
 
+    vec3 GetLookAtTarget();
+
     [[nodiscard]] const vec3& GetPosition() const;
 
     void SetPosition(const vec3& position);
@@ -21,11 +23,17 @@ public:
 
     [[nodiscard]] float GetYaw() const;
 
-    void SetYaw(float yaw);
-
-    void UpdatePosition(const vec3& position);
+    void SetYaw(float angle);
 
     void UpdateYaw(float angle);
+
+    [[nodiscard]] float GetPitch() const;
+
+    void SetPitch(float angle);
+
+    void UpdatePitch(float angle);
+
+    void UpdatePosition(const vec3& position);
 
     void UpdateForward(const vec3& forward);
 
@@ -34,4 +42,5 @@ private:
     vec3 m_direction;
     vec3 m_forwardVelocity;
     float m_yaw;
+    float m_pitch;
 };

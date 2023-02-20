@@ -60,19 +60,19 @@ void App::Input() {
             case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_ESCAPE)
                     isRunning = false;
-                if (event.key.keysym.sym == SDLK_UP)
-                    camera.UpdatePosition({0.0, static_cast<float>(3.0 * deltaTime), 0.0});
-                if (event.key.keysym.sym == SDLK_DOWN)
-                    camera.UpdatePosition({0.0, -static_cast<float>(3.0 * deltaTime), 0.0});
-                if (event.key.keysym.sym == SDLK_a)
+                if (event.key.keysym.sym == SDLK_w)
+                    camera.UpdatePitch(3.0 * deltaTime);
+                if (event.key.keysym.sym == SDLK_s)
+                    camera.UpdatePitch(-3.0 * deltaTime);
+                if (event.key.keysym.sym == SDLK_LEFT)
                     camera.UpdateYaw(-1.0 * deltaTime);
-                if (event.key.keysym.sym == SDLK_d)
+                if (event.key.keysym.sym == SDLK_RIGHT)
                     camera.UpdateYaw(1.0 * deltaTime);
-                if (event.key.keysym.sym == SDLK_w) {
+                if (event.key.keysym.sym == SDLK_UP) {
                     camera.SetForwardVelocity(camera.GetDirection() * 5.0 * deltaTime);
                     camera.SetPosition(camera.GetPosition() + camera.GetForwardVelocity());
                 }
-                if (event.key.keysym.sym == SDLK_s) {
+                if (event.key.keysym.sym == SDLK_DOWN) {
                     camera.SetForwardVelocity(camera.GetDirection() * 5.0 * deltaTime);
                     camera.SetPosition(camera.GetPosition() - camera.GetForwardVelocity());
                 }
@@ -97,15 +97,8 @@ void App::Update() {
     // Translate the mesh away from the camera
     mesh.SetTranslation({0.0, 0.0, 5.0});
 
-    // Initialize the target positive z-axis
-    vec3 target = {0, 0, 1};
-
-    mat4 cameraYawRotation = mat4::RotationMatrixY(camera.GetYaw());
-    vec3 direction = vec3::FromVec4(cameraYawRotation * vec4::FromVec3(target));
-    camera.SetDirection(direction);
-
     // Offset the camera position in the direction where the camera is pointing at
-    target = camera.GetPosition() + camera.GetDirection();
+    vec3 target = camera.GetLookAtTarget();
 
     vec3 up = {0, 1, 0};
     // Create the view matrix
