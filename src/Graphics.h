@@ -35,6 +35,8 @@ public:
 
     void ClearDepthBuffer();
 
+    float GetDepthValue(int x, int y);
+
     void RenderClear();
 
     void RenderPresent();

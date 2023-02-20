@@ -81,6 +81,11 @@ void Graphics::ClearDepthBuffer() {
 }
 
 
+float Graphics::GetDepthValue(int x, int y) {
+    return depthBuffer[(WINDOW_WIDTH * y) + x];
+}
+
+
 void Graphics::RenderClear() {
     SDL_RenderClear(renderer);
 }
@@ -394,7 +399,7 @@ void Graphics::DrawTexel(int x, int y, vec4 a, vec4 b, vec4 c,
     // Adjust 1/w so the pixels that are closer to the camera have smaller values
     interpolated_R_W = 1.0 - interpolated_R_W;
 
-    if (interpolated_R_W < depthBuffer[(WINDOW_WIDTH * y) + x]) {
+    if (interpolated_R_W < GetDepthValue(x, y)) {
         DrawPixel(x, y, tex.GetData()[texY * tex.GetWidth() + texX]);
         depthBuffer[(WINDOW_WIDTH * y) + x] = interpolated_R_W;
     }
@@ -418,7 +423,7 @@ void Graphics::DrawTrixel(int x, int y, vec4 a, vec4 b, vec4 c, color_t color) {
 
     interpolated_R_W = 1.0 - interpolated_R_W;
 
-    if (interpolated_R_W < depthBuffer[(WINDOW_WIDTH * y) + x]) {
+    if (interpolated_R_W < GetDepthValue(x, y)) {
         DrawPixel(x, y, color);
         depthBuffer[(WINDOW_WIDTH * y) + x] = interpolated_R_W;
     }
