@@ -42,7 +42,7 @@ private:
 
     Settings settings{};
 
-    float deltaTime;
+    float deltaTime{};
     uint32_t millisecsPreviousFrame{0};
     static constexpr int FPS = 60;
     static constexpr int MILLISECS_PER_FRAME = 1000 / FPS;

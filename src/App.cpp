@@ -66,9 +66,9 @@ void App::Input() {
                 if (event.key.keysym.sym == SDLK_DOWN)
                     camera.UpdatePosition({0.0, -static_cast<float>(3.0 * deltaTime), 0.0});
                 if (event.key.keysym.sym == SDLK_a)
-                    camera.UpdateYaw(1.0 * deltaTime);
-                if (event.key.keysym.sym == SDLK_d)
                     camera.UpdateYaw(-1.0 * deltaTime);
+                if (event.key.keysym.sym == SDLK_d)
+                    camera.UpdateYaw(1.0 * deltaTime);
                 if (event.key.keysym.sym == SDLK_w) {
                     camera.SetForwardVelocity(camera.GetDirection() * 5.0 * deltaTime);
                     camera.SetPosition(camera.GetPosition() + camera.GetForwardVelocity());
@@ -182,7 +182,10 @@ void App::Update() {
         polygon_t polygon = polygon_t::FromTriangle(
                 vec3::FromVec4(transformedVertices[0]),
                 vec3::FromVec4(transformedVertices[1]),
-                vec3::FromVec4(transformedVertices[2]));
+                vec3::FromVec4(transformedVertices[2]),
+                meshFace.a_uv,
+                meshFace.b_uv,
+                meshFace.c_uv);
 
         frustum.StartClipping(polygon);
 
@@ -220,14 +223,14 @@ void App::Update() {
                 projectedTriangle.points[i] = {projectedPoint.x, projectedPoint.y, projectedPoint.z, projectedPoint.w};
             }
 
-            projectedTriangle.texcoords[0] = {meshFace.a_uv.u, meshFace.a_uv.v};
-            projectedTriangle.texcoords[1] = {meshFace.b_uv.u, meshFace.b_uv.v};
-            projectedTriangle.texcoords[2] = {meshFace.c_uv.u, meshFace.c_uv.v};
+            projectedTriangle.texcoords[0] = triangleAfterClipping.texcoords[0];
+            projectedTriangle.texcoords[1] = triangleAfterClipping.texcoords[1];
+            projectedTriangle.texcoords[2] = triangleAfterClipping.texcoords[2];
 
             // Calculate the shade intensity
             float lightIntensityFactor = -light.direction.Dot(normal);
-
             uint32_t triangleColor = Light::ApplyLightIntensity(meshFace.color, lightIntensityFactor);
+
             projectedTriangle.color = triangleColor;
 
             trianglesToRender.push_back(projectedTriangle);
