@@ -16,7 +16,7 @@ App::App(const char* objFile, const char* textureFile) {
     gui = std::make_unique<Gui>(graphics->GetSDLWindow(), graphics->GetSDLRenderer());
 
     // Perspective Matrix
-    projectionMatrix = mat4::PerspectiveMatrix(FOV, ASPECT, ZNEAR, ZFAR);
+    projectionMatrix = mat4::PerspectiveMatrix(FOV_Y, ASPECT_Y, ZNEAR, ZFAR);
 
     // Render settings
     settings.cullMethod = CullMethod::CULL_BACKFACE;
@@ -29,6 +29,9 @@ App::App(const char* objFile, const char* textureFile) {
     // Load texture
     auto texture = std::make_unique<Texture>(textureFile);
     mesh.SetTexture(texture);
+
+    // Initialize frustum planes
+    frustum.InitializePlanes();
 
 }
 
@@ -175,43 +178,60 @@ void App::Update() {
             }
         }
 
-        Triangle projectedTriangle;
-        // Loop all three vertices to perform projection
-        for (int i = 0; i < 3; ++i) {
-            // Project the current vertex
-            vec4 projectedPoint = projectionMatrix * transformedVertices[i];
+        // Clipping Process
+        polygon_t polygon = polygon_t::FromTriangle(
+                vec3::FromVec4(transformedVertices[0]),
+                vec3::FromVec4(transformedVertices[1]),
+                vec3::FromVec4(transformedVertices[2]));
 
-            // Perform perspective divide with original z-value stored in w
-            if (projectedPoint.w != 0.0) {
-                projectedPoint.x /= projectedPoint.w;
-                projectedPoint.y /= projectedPoint.w;
-                projectedPoint.z /= projectedPoint.w;
+        frustum.StartClipping(polygon);
+
+        // Break the clipped polygon apart back into individual triangles
+        Triangle trianglesAfterClipping[MAX_NUM_POLY_TRIANGLES];
+        int numTrianglesAfterClipping = 0;
+
+        polygon_t::TrianglesFromPolygon(polygon, trianglesAfterClipping, numTrianglesAfterClipping);
+
+        // Loops all the assembled triangles after clipping
+        for (auto& triangleAfterClipping: trianglesAfterClipping) {
+            Triangle projectedTriangle;
+            // Loop all three vertices to perform projection
+            for (int i = 0; i < 3; ++i) {
+                // Project the current vertex
+                vec4 projectedPoint = projectionMatrix * triangleAfterClipping.points[i];
+
+                // Perform perspective divide with original z-value stored in w
+                if (projectedPoint.w != 0.0) {
+                    projectedPoint.x /= projectedPoint.w;
+                    projectedPoint.y /= projectedPoint.w;
+                    projectedPoint.z /= projectedPoint.w;
+                }
+                // Scale into the view
+                projectedPoint.x *= (WINDOW_WIDTH / 2.0);
+                projectedPoint.y *= (WINDOW_HEIGHT / 2.0);
+
+                // Invert the y value to fix upside-down object rendering
+                projectedPoint.y *= -1;
+
+                // Translate the projected points to the middle of the screen
+                projectedPoint.x += (WINDOW_WIDTH / 2.0);
+                projectedPoint.y += (WINDOW_HEIGHT / 2.0);
+
+                projectedTriangle.points[i] = {projectedPoint.x, projectedPoint.y, projectedPoint.z, projectedPoint.w};
             }
-            // Scale into the view
-            projectedPoint.x *= (WINDOW_WIDTH / 2.0);
-            projectedPoint.y *= (WINDOW_HEIGHT / 2.0);
 
-            // Invert the y value to fix upside-down object rendering
-            projectedPoint.y *= -1;
+            projectedTriangle.texcoords[0] = {meshFace.a_uv.u, meshFace.a_uv.v};
+            projectedTriangle.texcoords[1] = {meshFace.b_uv.u, meshFace.b_uv.v};
+            projectedTriangle.texcoords[2] = {meshFace.c_uv.u, meshFace.c_uv.v};
 
-            // Translate the projected points to the middle of the screen
-            projectedPoint.x += (WINDOW_WIDTH / 2.0);
-            projectedPoint.y += (WINDOW_HEIGHT / 2.0);
+            // Calculate the shade intensity
+            float lightIntensityFactor = -light.direction.Dot(normal);
 
-            projectedTriangle.points[i] = {projectedPoint.x, projectedPoint.y, projectedPoint.z, projectedPoint.w};
+            uint32_t triangleColor = Light::ApplyLightIntensity(meshFace.color, lightIntensityFactor);
+            projectedTriangle.color = triangleColor;
+
+            trianglesToRender.push_back(projectedTriangle);
         }
-
-        projectedTriangle.texcoords[0] = {meshFace.a_uv.u, meshFace.a_uv.v};
-        projectedTriangle.texcoords[1] = {meshFace.b_uv.u, meshFace.b_uv.v};
-        projectedTriangle.texcoords[2] = {meshFace.c_uv.u, meshFace.c_uv.v};
-
-        // Calculate the shade intensity
-        float lightIntensityFactor = -light.direction.Dot(normal);
-
-        uint32_t triangleColor = Light::ApplyLightIntensity(meshFace.color, lightIntensityFactor);
-        projectedTriangle.color = triangleColor;
-
-        trianglesToRender.push_back(projectedTriangle);
     }
 }
 

@@ -8,6 +8,7 @@
 #include "Light.h"
 #include "Graphics.h"
 #include "Gui.h"
+#include "Clipping.h"
 #include "Constants.hpp"
 #include "Settings.hpp"
 #include "Triangle.hpp"
@@ -32,6 +33,8 @@ private:
     mat4 projectionMatrix;
 
     Mesh mesh{};
+
+    Frustum frustum{};
 
     Light light{0, 0, 1};
 
