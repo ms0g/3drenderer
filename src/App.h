@@ -16,9 +16,11 @@
 
 class App {
 public:
-    App(const char* objFile, const char* textureFile);
+    App();
 
     [[nodiscard]] bool IsRunning() const;
+
+    void LoadMesh(const char* objFile, const char* textureFile, vec3 scale, vec3 translation, vec3 rotation);
 
     void Input();
     void Update();
@@ -29,10 +31,9 @@ private:
     std::unique_ptr<Gui> gui;
 
     std::vector<Triangle> trianglesToRender;
+    std::vector<Mesh> meshes;
 
     mat4 projectionMatrix;
-
-    Mesh mesh{};
 
     Frustum frustum{};
 

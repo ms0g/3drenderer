@@ -1,27 +1,26 @@
 #include "Mesh.h"
 #include "MeshData.hpp"
+#include "ObjParser.h"
 
 
-void Mesh::SetData(MeshData& meshData) {
-    m_rotation = {0, 0, 0};
-    m_translation = {0, 0, 0};
-    m_scale = {1.0, 1.0, 1.0};
+Mesh::Mesh(const char* objFile, const char* textureFile, vec3 scale, vec3 translation, vec3 rotation) :
+        m_scale(scale),
+        m_translation(translation),
+        m_rotation(rotation) {
+    auto meshData = ObjParser::Load(objFile);
 
     // Fill vertices
     m_vertices = meshData.vertices;
 
     // Fill faces
     m_faces = meshData.faces;
+
+    m_texture = std::make_unique<Texture>(textureFile);
 }
 
 
 const Texture& Mesh::GetTexture() const {
     return *m_texture;
-}
-
-
-void Mesh::SetTexture(std::unique_ptr<Texture>& tex) {
-    m_texture = std::move(tex);
 }
 
 

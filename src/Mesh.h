@@ -5,17 +5,12 @@
 #include "Triangle.hpp"
 
 
-class MeshData;
 class Texture;
 class Mesh {
 public:
-    Mesh() = default;
-
-    void SetData(MeshData& meshData);
+    Mesh(const char* objFile, const char* textureFile, vec3 scale, vec3 translation, vec3 rotation);
 
     [[nodiscard]] const Texture& GetTexture() const;
-
-    void SetTexture(std::unique_ptr<Texture>& tex);
 
     [[nodiscard]] const vec3& GetRotation() const;
 

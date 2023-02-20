@@ -14,4 +14,5 @@ struct Triangle {
     vec4 points[3];
     texcoord texcoords[3];
     uint32_t color;
+    Texture* texture;
 };

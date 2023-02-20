@@ -2,7 +2,10 @@
 
 
 int main() {
-    App app{"../assets/crab.obj", "../assets/crab.png"};
+    App app{};
+
+    app.LoadMesh("../assets/f117.obj", "../assets/f117.png", {1, 1, 1}, {-3, 0, +8}, {0, 0, 0});
+    app.LoadMesh("../assets/f22.obj", "../assets/f22.png", {1, 1, 1}, {3, 0, +8}, {0, 0, 0});
 
     while (app.IsRunning()) {
         app.Input();
