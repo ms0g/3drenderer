@@ -20,14 +20,14 @@ void vec3::Sub(const vec3& v) {
 }
 
 
-void vec3::Scale(const float n) {
+void vec3::Scale(float n) {
     x *= n;
     y *= n;
     z *= n;
 }
 
 
-vec3 vec3::Rotate(const float angleX, const float angleY, const float angleZ) const {
+vec3 vec3::Rotate(float angleX, float angleY, float angleZ) const {
     vec3 result = RotateX(angleX);
     result = result.RotateY(angleY);
     result = result.RotateZ(angleZ);
@@ -134,12 +134,12 @@ vec3 vec3::operator-(const vec3& v) const {
 }
 
 
-vec3 vec3::operator*(const float n) const {
+vec3 vec3::operator*(float n) const {
     return {x * n, y * n, z * n};
 }
 
 
-vec3 vec3::operator/(const float n) const {
+vec3 vec3::operator/(float n) const {
     return {x / n, y / n, z / n};
 }
 
@@ -160,7 +160,7 @@ vec3& vec3::operator-=(const vec3& v) {
 }
 
 
-vec3& vec3::operator*=(const float n) {
+vec3& vec3::operator*=(float n) {
     x *= n;
     y *= n;
     z *= n;
@@ -168,7 +168,7 @@ vec3& vec3::operator*=(const float n) {
 }
 
 
-vec3& vec3::operator/=(const float n) {
+vec3& vec3::operator/=(float n) {
     x /= n;
     y /= n;
     z /= n;

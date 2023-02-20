@@ -19,13 +19,13 @@ void vec2::Sub(const vec2& v) {
 }
 
 
-void vec2::Scale(const float n) {
+void vec2::Scale(float n) {
     x *= n;
     y *= n;
 }
 
 
-vec2 vec2::Rotate(const float angle) const {
+vec2 vec2::Rotate(float angle) const {
     return {x * cos(angle) - y * sin(angle), x * sin(angle) + y * cos(angle)};
 }
 
@@ -103,12 +103,12 @@ vec2 vec2::operator-(const vec2& v) const {
 }
 
 
-vec2 vec2::operator*(const float n) const {
+vec2 vec2::operator*(float n) const {
     return {x * n, y * n};
 }
 
 
-vec2 vec2::operator/(const float n) const {
+vec2 vec2::operator/(float n) const {
     return {x / n, y / n};
 }
 
@@ -127,14 +127,14 @@ vec2& vec2::operator-=(const vec2& v) {
 }
 
 
-vec2& vec2::operator*=(const float n) {
+vec2& vec2::operator*=(float n) {
     x *= n;
     y *= n;
     return *this;
 }
 
 
-vec2& vec2::operator/=(const float n) {
+vec2& vec2::operator/=(float n) {
     x /= n;
     y /= n;
     return *this;
