@@ -28,6 +28,10 @@ vec3 Camera::GetLookAtTarget() {
     return target;
 }
 
+vec3 Camera::GetOrigin() {
+    return {0, 0, 0};
+}
+
 
 const vec3& Camera::GetPosition() const {
     return m_position;

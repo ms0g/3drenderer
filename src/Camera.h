@@ -9,6 +9,8 @@ public:
 
     vec3 GetLookAtTarget();
 
+    vec3 GetOrigin();
+
     [[nodiscard]] const vec3& GetPosition() const;
 
     void SetPosition(const vec3& position);

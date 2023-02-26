@@ -167,8 +167,7 @@ void App::ProcessGraphicsPipeline(Mesh& mesh) {
         if (graphics->ShouldBackfaceCulling(settings)) {
 
             // Find the vector between a point in the triangle and camera origin
-            vec3 origin = {0, 0, 0};
-            vec3 cameraRay = origin - vec3::FromVec4(transformedVertices[0]);
+            vec3 cameraRay = camera.GetOrigin() - vec3::FromVec4(transformedVertices[0]);
 
             // Calculate how aligned the normal onto the camera ray
             float dotNormalCamera = faceNormal.Dot(cameraRay);
