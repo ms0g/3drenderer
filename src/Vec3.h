@@ -3,7 +3,15 @@
 
 class vec4;
 struct vec3 {
-    float x, y, z;
+    union {
+        struct {
+            float x;
+            float y;
+            float z;
+        };
+
+        float v[3];
+    };
 
     vec3();
 

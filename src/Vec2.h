@@ -2,7 +2,14 @@
 
 class vec4;
 struct vec2 {
-    float x, y;
+    union {
+        struct {
+            float x;
+            float y;
+        };
+
+        float v[2];
+    };
 
     vec2();
 
