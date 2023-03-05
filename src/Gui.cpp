@@ -1,4 +1,5 @@
 #include "Gui.h"
+#include <string>
 #include "Settings.hpp"
 #include "../libs/imgui/imgui.h"
 #include "../libs/imgui/imgui_impl_sdl.h"
@@ -54,7 +55,28 @@ void Gui::Render(Settings& settings) {
     }
     ImGui::End();
 
+    if (ImGui::Begin("FPS")) {
+        ImGui::Text("%s", std::to_string(fps).c_str());
+    }
+    ImGui::End();
+
     //Render ImGui
     ImGui::Render();
     ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
+}
+
+
+void Gui::UpdateFPSCounter(float dt) {
+    double elapsedSeconds;
+
+    currentSeconds += dt;
+    elapsedSeconds = currentSeconds - previousSeconds;
+    /* limit text updates to 4 per second */
+    if (elapsedSeconds > 0.25) {
+        previousSeconds = currentSeconds;
+        fps = (double) frameCount / elapsedSeconds;
+
+        frameCount = 0;
+    }
+    frameCount++;
 }

@@ -10,4 +10,12 @@ public:
     ~Gui();
 
     void Render(Settings& settings);
+
+    void UpdateFPSCounter(float dt);
+
+private:
+    double previousSeconds{};
+    double currentSeconds{};
+    int frameCount{};
+    int fps;
 };
