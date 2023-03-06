@@ -38,54 +38,35 @@ void App::LoadMesh(const char* objFile, const char* textureFile, vec3 scale, vec
 
 void App::Input() {
     SDL_Event event;
+    SDL_PollEvent(&event);
 
-    while (SDL_PollEvent(&event)) {
-        ImGui_ImplSDL2_ProcessEvent(&event);
-        ImGuiIO& io = ImGui::GetIO();
+    ImGui_ImplSDL2_ProcessEvent(&event);
+    ImGuiIO& io = ImGui::GetIO();
 
-        int mouseX, mouseY;
-        const int buttons = SDL_GetMouseState(&mouseX, &mouseY);
-        io.MousePos = ImVec2(mouseX, mouseY);
-        io.MouseDown[0] = buttons & SDL_BUTTON(SDL_BUTTON_LEFT);
-        io.MouseDown[1] = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
+    int mouseX, mouseY;
+    const int buttons = SDL_GetMouseState(&mouseX, &mouseY);
+    io.MousePos = ImVec2(mouseX, mouseY);
+    io.MouseDown[0] = buttons & SDL_BUTTON(SDL_BUTTON_LEFT);
+    io.MouseDown[1] = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
 
-        switch (event.type) {
-            case SDL_QUIT:
-                isRunning = false;
-                break;
-            case SDL_KEYDOWN:
-                if (event.key.keysym.sym == SDLK_ESCAPE) {
-                    isRunning = false;
-                    break;
-                }
-                if (event.key.keysym.sym == SDLK_w) {
-                    camera.UpdatePitch(-3.0 * deltaTime);
-                    break;
-                }
-                if (event.key.keysym.sym == SDLK_s) {
-                    camera.UpdatePitch(3.0 * deltaTime);
-                    break;
-                }
-                if (event.key.keysym.sym == SDLK_LEFT) {
-                    camera.UpdateYaw(-1.0 * deltaTime);
-                    break;
-                }
-                if (event.key.keysym.sym == SDLK_RIGHT) {
-                    camera.UpdateYaw(1.0 * deltaTime);
-                    break;
-                }
-                if (event.key.keysym.sym == SDLK_UP) {
-                    camera.SetForwardVelocity(camera.GetDirection() * 5.0 * deltaTime);
-                    camera.SetPosition(camera.GetPosition() + camera.GetForwardVelocity());
-                    break;
-                }
-                if (event.key.keysym.sym == SDLK_DOWN) {
-                    camera.SetForwardVelocity(camera.GetDirection() * 5.0 * deltaTime);
-                    camera.SetPosition(camera.GetPosition() - camera.GetForwardVelocity());
-                    break;
-                }
-                break;
-        }
+    auto* keystate = SDL_GetKeyboardState(nullptr);
+
+    if (keystate[SDL_SCANCODE_ESCAPE]) {
+        isRunning = false;
+    } else if (keystate[SDL_SCANCODE_W]) {
+        camera.UpdatePitch(-3.0 * deltaTime);
+    } else if (keystate[SDL_SCANCODE_S]) {
+        camera.UpdatePitch(3.0 * deltaTime);
+    } else if (keystate[SDL_SCANCODE_LEFT]) {
+        camera.UpdateYaw(-1.0 * deltaTime);
+    } else if (keystate[SDL_SCANCODE_RIGHT]) {
+        camera.UpdateYaw(1.0 * deltaTime);
+    } else if (keystate[SDL_SCANCODE_UP]) {
+        camera.SetForwardVelocity(camera.GetDirection() * 5.0 * deltaTime);
+        camera.SetPosition(camera.GetPosition() + camera.GetForwardVelocity());
+    } else if (keystate[SDL_SCANCODE_DOWN]) {
+        camera.SetForwardVelocity(camera.GetDirection() * 5.0 * deltaTime);
+        camera.SetPosition(camera.GetPosition() - camera.GetForwardVelocity());
     }
 }
 
@@ -247,8 +228,9 @@ void App::Update() {
         SDL_Delay(timeToWait);
 
     deltaTime = (SDL_GetTicks() - millisecsPreviousFrame) / 1000.0;
-
     millisecsPreviousFrame = SDL_GetTicks();
+
+    gui->UpdateFPSCounter(deltaTime);
 
     for (auto& mesh: meshes) {
         ProcessGraphicsPipeline(mesh);
