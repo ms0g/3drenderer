@@ -49,22 +49,22 @@ void App::Input() {
     io.MouseDown[0] = buttons & SDL_BUTTON(SDL_BUTTON_LEFT);
     io.MouseDown[1] = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
 
-    auto* keystate = SDL_GetKeyboardState(nullptr);
+    auto* keyState = SDL_GetKeyboardState(nullptr);
 
-    if (keystate[SDL_SCANCODE_ESCAPE]) {
+    if (keyState[SDL_SCANCODE_ESCAPE]) {
         isRunning = false;
-    } else if (keystate[SDL_SCANCODE_W]) {
+    } else if (keyState[SDL_SCANCODE_W]) {
         camera.UpdatePitch(-3.0 * deltaTime);
-    } else if (keystate[SDL_SCANCODE_S]) {
+    } else if (keyState[SDL_SCANCODE_S]) {
         camera.UpdatePitch(3.0 * deltaTime);
-    } else if (keystate[SDL_SCANCODE_LEFT]) {
+    } else if (keyState[SDL_SCANCODE_LEFT]) {
         camera.UpdateYaw(-1.0 * deltaTime);
-    } else if (keystate[SDL_SCANCODE_RIGHT]) {
+    } else if (keyState[SDL_SCANCODE_RIGHT]) {
         camera.UpdateYaw(1.0 * deltaTime);
-    } else if (keystate[SDL_SCANCODE_UP]) {
+    } else if (keyState[SDL_SCANCODE_UP]) {
         camera.SetForwardVelocity(camera.GetDirection() * 5.0 * deltaTime);
         camera.SetPosition(camera.GetPosition() + camera.GetForwardVelocity());
-    } else if (keystate[SDL_SCANCODE_DOWN]) {
+    } else if (keyState[SDL_SCANCODE_DOWN]) {
         camera.SetForwardVelocity(camera.GetDirection() * 5.0 * deltaTime);
         camera.SetPosition(camera.GetPosition() - camera.GetForwardVelocity());
     }
