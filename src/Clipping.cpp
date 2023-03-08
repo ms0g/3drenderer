@@ -105,13 +105,13 @@ void Frustum::ClipPolygonAgainstPlane(polygon_t& p, int plane) {
 
             // Calculate the intersection point I = Q1 + t(Q2-Q1)
             vec3 intersectionPoint = {
-                    utils::lerp(previousVertex->x, currentVertex->x, t),
-                    utils::lerp(previousVertex->y, currentVertex->y, t),
-                    utils::lerp(previousVertex->z, currentVertex->z, t)};
+                    math::lerp(previousVertex->x, currentVertex->x, t),
+                    math::lerp(previousVertex->y, currentVertex->y, t),
+                    math::lerp(previousVertex->z, currentVertex->z, t)};
 
             texcoord intersectionTexcoord = {
-                    utils::lerp(previousTexcoord->u, currentTexcoord->u, t),
-                    utils::lerp(previousTexcoord->v, currentTexcoord->v, t)
+                    math::lerp(previousTexcoord->u, currentTexcoord->u, t),
+                    math::lerp(previousTexcoord->v, currentTexcoord->v, t)
             };
 
             // Insert the intersection point to the list of "inside vertices"
@@ -166,6 +166,6 @@ void polygon_t::TrianglesFromPolygon(polygon_t& p, Triangle* triangles, int& num
 }
 
 
-float utils::lerp(float a, float b, float t) {
+float math::lerp(float a, float b, float t) {
     return a + t * (b - a);
 }

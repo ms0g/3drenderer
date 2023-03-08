@@ -105,6 +105,6 @@ bool Graphics::ShouldBackfaceCulling(Settings& settings) {
     return settings.cullMethod == CullMethod::CULL_BACKFACE;
 }
 
-namespace utils {
-vec3 barycentric_weights(vec2 a, vec2 b, vec2 c, vec2 p);
+namespace math {
+vec3 computeBarycentricWeights(vec2 a, vec2 b, vec2 c, vec2 p);
 }

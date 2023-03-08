@@ -372,7 +372,7 @@ void Graphics::DrawTexel(int x, int y, vec4 a, vec4 b, vec4 c,
     vec2 bv2 = vec2::FromVec4(b);
     vec2 cv2 = vec2::FromVec4(c);
 
-    vec3 weights = utils::barycentric_weights(av2, bv2, cv2, p);
+    vec3 weights = math::computeBarycentricWeights(av2, bv2, cv2, p);
 
     float alpha = weights.x;
     float beta = weights.y;
@@ -413,7 +413,7 @@ void Graphics::DrawTrixel(int x, int y, vec4 a, vec4 b, vec4 c, color_t color) {
     vec2 bv2 = vec2::FromVec4(b);
     vec2 cv2 = vec2::FromVec4(c);
 
-    vec3 weights = utils::barycentric_weights(av2, bv2, cv2, p);
+    vec3 weights = math::computeBarycentricWeights(av2, bv2, cv2, p);
 
     float alpha = weights.x;
     float beta = weights.y;
@@ -445,7 +445,7 @@ void Graphics::DrawTrixel(int x, int y, vec4 a, vec4 b, vec4 c, color_t color) {
 //  (A)------------(C)
 //
 ///////////////////////////////////////////////////////////////////////////////
-vec3 utils::barycentric_weights(vec2 a, vec2 b, vec2 c, vec2 p) {
+vec3 math::computeBarycentricWeights(vec2 a, vec2 b, vec2 c, vec2 p) {
     vec2 ac = c - a;
     vec2 ab = b - a;
     vec2 ap = p - a;

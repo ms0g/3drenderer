@@ -46,6 +46,6 @@ private:
     plane_t m_planes[NUM_PLANES];
 };
 
-namespace utils {
+namespace math {
 float lerp(float a, float b, float t);
 }
