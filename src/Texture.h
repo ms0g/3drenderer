@@ -13,7 +13,7 @@ struct texcoord {
     texcoord& operator=(const texcoord& other);
 };
 
-class upng_t;
+struct upng_t;
 class Texture {
 public:
     explicit Texture(const char* filename);

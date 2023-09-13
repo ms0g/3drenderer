@@ -9,7 +9,7 @@ public:
 
     ~Gui();
 
-    void Render(Settings& settings);
+    void Render(Settings& settings) const;
 
     void UpdateFPSCounter(float dt);
 
@@ -17,5 +17,5 @@ private:
     double previousSeconds{};
     double currentSeconds{};
     int frameCount{};
-    int fps;
+    int fps{};
 };

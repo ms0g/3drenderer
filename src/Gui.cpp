@@ -25,7 +25,7 @@ Gui::~Gui() {
     ImGui::DestroyContext();
 }
 
-void Gui::Render(Settings& settings) {
+void Gui::Render(Settings& settings) const {
     // Start the Dear ImGui frame
     ImGui_ImplSDLRenderer_NewFrame();
     ImGui_ImplSDL2_NewFrame();
