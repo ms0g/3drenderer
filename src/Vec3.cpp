@@ -181,4 +181,9 @@ vec3 vec3::operator-() const {
 }
 
 
+float Vec3::Lerp(float a, float b, float t) {
+    return a + t * (b - a);
+}
+
+
 

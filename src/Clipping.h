@@ -45,7 +45,3 @@ private:
     static constexpr int NUM_PLANES = 6;
     plane_t m_planes[NUM_PLANES];
 };
-
-namespace math {
-float lerp(float a, float b, float t);
-}

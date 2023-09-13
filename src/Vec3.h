@@ -10,7 +10,7 @@ struct vec3 {
             float z;
         };
 
-        float v[3];
+        float v[3]{};
     };
 
     vec3();
@@ -55,3 +55,7 @@ struct vec3 {
     vec3& operator*=(float n);                          // v1 *= n
     vec3& operator/=(float n);                          // v1 /= n
 };
+
+namespace Vec3 {
+float Lerp(float a, float b, float t);
+}
