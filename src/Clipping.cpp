@@ -1,5 +1,6 @@
 #include "Clipping.h"
 #include <cmath>
+#include "Math.hpp"
 #include "Constants.hpp"
 #include "Triangle.h"
 
@@ -104,14 +105,11 @@ void Frustum::ClipPolygonAgainstPlane(polygon_t& p, int plane) {
             float t = previousDot / (previousDot - currentDot);
 
             // Calculate the intersection point I = Q1 + t(Q2-Q1)
-            vec3 intersectionPoint = {
-                    Vec3::Lerp(previousVertex->x, currentVertex->x, t),
-                    Vec3::Lerp(previousVertex->y, currentVertex->y, t),
-                    Vec3::Lerp(previousVertex->z, currentVertex->z, t)};
+            vec3 intersectionPoint = Vec3::Lerp(*previousVertex, *currentVertex, t);
 
             texcoord intersectionTexcoord = {
-                    Vec3::Lerp(previousTexcoord->u, currentTexcoord->u, t),
-                    Vec3::Lerp(previousTexcoord->v, currentTexcoord->v, t)
+                    Mathf::Lerp(previousTexcoord->u, currentTexcoord->u, t),
+                    Mathf::Lerp(previousTexcoord->v, currentTexcoord->v, t)
             };
 
             // Insert the intersection point to the list of "inside vertices"

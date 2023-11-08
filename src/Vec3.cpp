@@ -181,8 +181,10 @@ vec3 vec3::operator-() const {
 }
 
 
-float Vec3::Lerp(float a, float b, float t) {
-    return a + t * (b - a);
+vec3 Vec3::Lerp(vec3& a, vec3& b, float t) {
+    return {a.x + t * (b.x - a.x),
+            a.y + t * (b.y - a.y),
+            a.z + t * (b.z - a.z)};
 }
 
 

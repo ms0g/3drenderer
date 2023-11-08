@@ -57,5 +57,5 @@ struct vec3 {
 };
 
 namespace Vec3 {
-float Lerp(float a, float b, float t);
+vec3 Lerp(vec3& a, vec3& b, float t);
 }
